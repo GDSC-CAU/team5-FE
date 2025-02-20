@@ -1,0 +1,71 @@
+/* 전체 화면 크기를 아이폰 크기로 고정 */
+.chat-page {
+  width: 375px; /* iPhone 13, 14 기준 */
+  height: 812px; /* iPhone 13, 14 기준 */
+  max-width: 100%;
+  max-height: 100vh;
+  margin: 0 auto; /* 가운데 정렬 */
+  background-color: #f8f9fa; /* 배경색 */
+  overflow: hidden;
+  border: 1px solid #ddd; /* 경계선 추가 (테스트용) */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 직원 리스트 컨테이너 */
+.member-list {
+  align-self: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ✅ 2열로 정렬 */
+  gap: 20px; /* ✅ 항목 간격 */
+  padding: 20px;
+  justify-items: center; /* ✅ 중앙 정렬 */
+}
+
+/* 직원 개별 아이템 */
+.member-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 직원 프로필 이미지 */
+.member-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 직원 이름 */
+.member-name {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+
+/* 아이폰 12, 13, 14 Pro Max 크기 대응 */
+@media screen and (min-width: 430px) {
+  .chat-page {
+    width: 430px;
+    height: 932px;
+  }
+}
+
+/* 아이폰 SE (작은 화면) */
+@media screen and (max-width: 320px) {
+  .chat-page {
+    width: 320px;
+    height: 568px;
+  }
+}
+
+/* 아이폰 Pro Max (큰 화면) */
+@media screen and (min-width: 430px) {
+  .chat-page {
+    width: 430px;
+    height: 932px;
+  }
+}

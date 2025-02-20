@@ -1,0 +1,38 @@
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  max-height: 300px; /* ✅ 스크롤 가능하도록 설정 */
+  overflow-y: auto;
+}
+
+/* 개별 구성원 아이템 */
+.member-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* 구성원 선택 시 배경 회색 */
+.member-item.selected {
+  background-color: lightgray;
+}
+
+/* 구성원 이미지 */
+.member-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* 구성원 이름 */
+.member-name {
+  font-size: 14px;
+  font-weight: bold;
+}

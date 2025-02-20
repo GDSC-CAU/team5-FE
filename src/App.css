@@ -1,0 +1,8 @@
+/* 전체 화면 중앙 정렬 */
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #eee; /* 배경색 추가 */
+}

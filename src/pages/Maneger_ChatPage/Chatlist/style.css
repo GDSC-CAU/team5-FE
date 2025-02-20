@@ -1,0 +1,52 @@
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 각 채팅 아이템 간 간격 */
+  padding: 10px;
+}
+
+/* 개별 채팅 아이템 박스 */
+.chat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 시간 정보를 오른쪽으로 정렬 */
+  background-color: white;
+  border-radius: 10px; /* 둥근 모서리 */
+  padding: 15px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 효과 */
+}
+
+/* 왼쪽 컨텐츠: 이미지 + 텍스트 */
+.chat-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 이미지와 텍스트 간격 */
+}
+
+/* 프로필 이미지 */
+.chat-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* 텍스트 정보 */
+.chat-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-title {
+  font-weight: bold;
+}
+
+.chat-message {
+  font-size: 14px;
+  color: gray;
+}
+
+/* 시간 정보 */
+.chat-time {
+  font-size: 12px;
+  color: gray;
+}

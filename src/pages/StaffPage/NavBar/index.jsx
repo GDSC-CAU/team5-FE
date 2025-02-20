@@ -1,0 +1,15 @@
+import React from "react";
+import { Menu, Plus } from "lucide-react";
+import "./style.css";
+
+export default function Navbar() {
+  return (
+    <nav className="navbar">
+      <div className="navbar-left">
+        <Menu className="menu-icon" />
+        <h1 className="navbar-title">직원</h1>
+      </div>
+      <Plus className="plus-icon" />
+    </nav>
+  );
+}
