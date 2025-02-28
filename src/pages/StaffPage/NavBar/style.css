@@ -1,13 +1,14 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 가로로 정렬 & 균등 분배 */
+  justify-content: space-between; /* 가로 정렬 & 균등 분배 */
   padding: 10px 15px;
   background-color: white;
   border-bottom: 1px solid #ddd;
+  position: relative; /* 드롭다운 위치 설정을 위해 필요 */
 }
 
-/* 햄버거 메뉴와 채팅을 묶어줌 */
+/* 햄버거 메뉴와 직원 드롭다운을 묶어줌 */
 .navbar-left {
   display: flex;
   align-items: center;
@@ -19,13 +20,46 @@
   cursor: pointer;
 }
 
-.navbar-title {
-  font-size: 18px; /* 제목 크기 */
-  font-weight: bold;
-  flex-grow: 1; /* 가운데 정렬 효과 */
-  text-align: center;
+/* 드롭다운 컨테이너 */
+.dropdown {
+  position: relative;
+  cursor: pointer;
 }
 
+/* 드롭다운 버튼 */
+.dropdown-toggle {
+  font-size: 18px; /* 제목 크기 */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 드롭다운 메뉴 */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  list-style: none;
+  padding: 5px 0;
+  width: 100px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.dropdown-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background: #f1f1f1;
+}
+
+/* 플러스 버튼 */
 .plus-icon {
   font-size: 24px; /* 플러스 아이콘 크기 */
   cursor: pointer;

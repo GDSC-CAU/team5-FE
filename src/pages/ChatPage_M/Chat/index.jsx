@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./style.css"; // 스타일 적용
 import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
 
@@ -49,8 +49,14 @@ export default function ChatPage() {
   ]);
 
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef(null); // ✅ 스크롤을 위한 Ref
 
-  // "공구리" 클릭 시 설명 토글 (해당 메시지에만)
+  // ✅ 메시지 추가 시 자동 스크롤
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // "공구리" 클릭 시 설명 토글
   const toggleExplanation = (id) => {
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
@@ -89,7 +95,7 @@ export default function ChatPage() {
       <div className="chat-messages">
         {messages.map((msg) => (
           <div key={msg.id} className={`chat-section ${msg.sender}`}>
-            {/* ✅ 관리자만 프로필과 이름 표시 */}
+            {/* 관리자 메시지 */}
             {msg.sender === "admin" && (
               <>
                 <img src={msg.img} alt={msg.name} className="chat-profile" />
@@ -129,7 +135,7 @@ export default function ChatPage() {
               </>
             )}
 
-            {/* ✅ 사용자 메시지: 이름과 프로필 제거 */}
+            {/* 사용자 메시지 */}
             {msg.sender === "user" && (
               <div className="chat-content user">
                 <div className="chat-bubble user-bubble">
@@ -140,9 +146,11 @@ export default function ChatPage() {
             )}
           </div>
         ))}
+        {/* ✅ 스크롤 자동 이동을 위한 빈 div */}
+        <div ref={messagesEndRef}></div>
       </div>
 
-      {/* ✅ 메시지 입력창 */}
+      {/* 메시지 입력창 */}
       <div className="chat-input-container">
         <input
           type="text"

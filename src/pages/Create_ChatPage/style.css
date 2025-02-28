@@ -20,26 +20,12 @@
   background: white;
 }
 
-/* 아이폰 12, 13, 14 Pro Max 크기 대응 */
-@media screen and (min-width: 430px) {
-  .chat-page {
-    width: 430px;
-    height: 932px;
-  }
-}
-
-/* 아이폰 SE (작은 화면) */
-@media screen and (max-width: 320px) {
-  .chat-page {
-    width: 320px;
-    height: 568px;
-  }
-}
-
-/* 아이폰 Pro Max (큰 화면) */
-@media screen and (min-width: 430px) {
-  .chat-page {
-    width: 430px;
-    height: 932px;
-  }
+.chat-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }

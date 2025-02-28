@@ -4,10 +4,9 @@ import "./style.css"; // 스타일 적용
 
 export default function ChatPage() {
   return (
-    <div className="chat-page">
-      <div className="chat-content">
+    <div>
         <Chat />
-      </div>
+    
     </div>
   );
 }

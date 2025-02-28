@@ -23,7 +23,7 @@ export default function ChatTitle() {
         <Item text={"구성원을 \n 선택해주세요"} />
       </div>
       <MemberList /> {/* ✅ 구성원 선택 리스트 추가 */}
-      <button className="next-button">다음</button>
+      <button className="next-button2">다음</button>
     </div>
   );
 }

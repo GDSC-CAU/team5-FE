@@ -24,15 +24,15 @@ export default function MemberList() {
   };
 
   return (
-    <div className="member-list">
+    <div className="member-select-list">
       {members.map((member) => (
         <div
           key={member.id}
-          className={`member-item ${selectedMembers.includes(member.id) ? "selected" : ""}`}
+          className={`member-select-item ${selectedMembers.includes(member.id) ? "selected" : ""}`}
           onClick={() => toggleSelect(member.id)}
         >
-          <img src={member.img} alt={member.name} className="member-img" />
-          <span className="member-name">
+          <img src={member.img} alt={member.name} className="member-select-img" />
+          <span className="member-select-name">
             {member.name} ({member.english})
           </span>
         </div>

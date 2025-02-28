@@ -16,14 +16,15 @@
 .member-list {
   align-self: center;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* ✅ 2열로 정렬 */
-  gap: 20px; /* ✅ 항목 간격 */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
   padding: 20px;
-  justify-items: center; /* ✅ 중앙 정렬 */
+  justify-items: center;
 }
 
 /* 직원 개별 아이템 */
 .member-item {
+  position: relative; /* 삭제 버튼 위치를 위한 상대적 위치 설정 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,27 +46,110 @@
   margin-top: 8px;
 }
 
-
-/* 아이폰 12, 13, 14 Pro Max 크기 대응 */
-@media screen and (min-width: 430px) {
-  .chat-page {
-    width: 430px;
-    height: 932px;
-  }
+/* 삭제 버튼 (X) */
+.delete-button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 10px;
+  height: 30px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  visibility: hidden; /* 기본적으로 숨김 */
 }
 
-/* 아이폰 SE (작은 화면) */
-@media screen and (max-width: 320px) {
-  .chat-page {
-    width: 320px;
-    height: 568px;
-  }
+/* 삭제 모드 활성화 시 X 버튼 표시 */
+.delete-mode .delete-button {
+  visibility: visible;
 }
 
-/* 아이폰 Pro Max (큰 화면) */
-@media screen and (min-width: 430px) {
-  .chat-page {
-    width: 430px;
-    height: 932px;
-  }
+.member-list {
+  overflow-y: auto; /* 세로 스크롤 가능 */
+  max-height: 600px; /* 필요에 따라 조절 */
+}
+
+/* 모달 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 모달 창 */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 모든 요소를 가운데 정렬 */
+}
+
+/* 닫기 버튼 */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: -130px;
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* 프로필 이미지 (기본) */
+.profile-placeholder {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+/* 입력 필드 */
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* 체크박스 */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+/* 추가 버튼 */
+.add-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #006EFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.add-btn:hover {
+  background-color: #0056CC;
 }

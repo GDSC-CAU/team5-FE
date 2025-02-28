@@ -24,7 +24,7 @@ export default function ChatTitle() {
       </div>
       <input 
         type="text"
-        className="chat-input"
+        className="name-input"
         placeholder="채팅창 이름을 입력하세요"
         value={chatName}
         onChange={(e) => setChatName(e.target.value)}

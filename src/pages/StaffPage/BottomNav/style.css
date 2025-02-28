@@ -8,7 +8,7 @@
   max-width: 375px; /* ✅ 아이폰 가로 크기 고정 */
   background-color: white; /* 배경색 흰색 */
   border-top: 1px solid #ddd;
-  padding: 10px 27px; /*NavBar는 10, 15로 했는데.. 뭔가 이상 ?*/
+  padding: 10px 1px; /*NavBar는 10, 15로 했는데.. 뭔가 이상 ?*/
   height: 60px;
 }
 
