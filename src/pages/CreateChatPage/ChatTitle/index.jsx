@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.css"; // 스타일 적용
 
 const Item = ({ text }) => {
@@ -16,6 +17,7 @@ const Item = ({ text }) => {
 
 export default function ChatTitle() {
   const [chatName, setChatName] = useState(""); // 입력값 저장
+  const navigate = useNavigate();
 
   return (
     <div className="chat-title-container">
@@ -29,7 +31,7 @@ export default function ChatTitle() {
         value={chatName}
         onChange={(e) => setChatName(e.target.value)}
       />
-      <button className="next-button">다음</button>
+      <button className="next-button" onClick={() => navigate("/CreateChat2")}>다음</button>
     </div>
   );
 }

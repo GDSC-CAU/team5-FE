@@ -1,13 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Maneger_ChatPage from "./pages/Maneger_ChatPage"; // ChatPage 연결
-import Create_ChatPage from "./pages/Create_ChatPage";
-import Create_ChatPage_Step2 from "./pages/Create_ChatPage_Step2";
-import ChatPage_M from "./pages/ChatPage_M";
+import ManagerChatPage from "./pages/Manager/ManagerChatPage"; // ChatPage 연결
+import CreateChatPage from "./pages/CreateChatPage";
+import CreateChatPageStep2 from "./pages/CreateChatPageStep2";
+import ChatPageM from "./pages/ChatPageM";
 import StaffPage from "./pages/StaffPage";
 import LoginPage from "./pages/LoginPage";
-import SignupPage_Maneger from "./pages/SignupPage_Maneger";
-import SignupPage_Staff from "./pages/SignupPage_Staff";
+import SignupPageManager from "./pages/SignupPageManager";
+import SignupPageStaff from "./pages/SignupPageStaff";
+import ReportPage from "./pages/ReportPage";
+import ReportListPage from "./pages/Manager/ReportListPage";
 import "./App.css";
 
 function App() {
@@ -15,14 +17,16 @@ function App() {
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path="/Maneger_Chat" element={<Maneger_ChatPage />} />
-          <Route path="/Create_Chat" element={<Create_ChatPage />} />
-          <Route path="/Create_Chat2" element={<Create_ChatPage_Step2 />} />
-          <Route path="/Chat_M" element={<ChatPage_M />} />
+          <Route path="/ManagerChat" element={<ManagerChatPage />} />
+          <Route path="/CreateChat" element={<CreateChatPage />} />
+          <Route path="/CreateChat2" element={<CreateChatPageStep2 />} />
+          <Route path="/ChatM" element={<ChatPageM />} />
           <Route path="/Staff" element={<StaffPage />} />
           <Route path="/Login" element={<LoginPage />} />
-          <Route path="/manegesignup" element={<SignupPage_Maneger />} />
-          <Route path="/staffsignup" element={<SignupPage_Staff />} />
+          <Route path="/manegesignup" element={<SignupPageManager />} />
+          <Route path="/staffsignup" element={<SignupPageStaff />} />
+          <Route path="/report" element={<ReportPage />} />
+          <Route path="/reportlist" element={<ReportListPage />} />
         </Routes>
       </div>
     </Router>

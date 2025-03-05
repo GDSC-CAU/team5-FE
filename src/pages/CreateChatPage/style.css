@@ -1,7 +1,7 @@
 /* 전체 화면 크기를 아이폰 크기로 고정 */
 .chat-page {
-  width: 375px; /* iPhone 13, 14 기준 */
-  height: 812px; /* iPhone 13, 14 기준 */
+  width: 375px;
+  height: 812px;
   max-width: 100%;
   max-height: 100vh;
   margin: 0 auto; /* 가운데 정렬 */

@@ -1,0 +1,28 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 가로로 정렬 & 균등 분배 */
+  padding: 10px 15px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 햄버거 메뉴와 채팅을 묶어줌 */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-icon {
+  font-size: 24px; /* 햄버거 아이콘 크기 */
+  cursor: pointer;
+}
+
+.navbar-title {
+  font-size: 18px; /* 제목 크기 */
+  font-weight: bold;
+  flex-grow: 1; /* 가운데 정렬 효과 */
+  text-align: center;
+}
+

@@ -1,0 +1,86 @@
+.report-page {
+    width: 375px; 
+    height: 812px; 
+    max-width: 100%;
+    max-height: 100vh;
+    margin: 0 auto; 
+    background-color: #f8f9fa; 
+    overflow: hidden;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .report-content {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    margin-top: 40%;
+  }
+  
+  .report-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .report-text {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .report-subtext {
+    font-size: 12px;
+    color: darkgray;
+    margin-top: 5px;
+  }
+  
+  .sound-wave {
+    width: 100%;
+    height: 100px;
+    margin: 20px 0;
+  }
+  
+  .report-button {
+    background-color: red;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 50%;
+  }
+  
+  .report-button.recording {
+    background-color: darkred;
+  }
+  
+  .upload-button {
+    background-color: gray;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 50%;
+    margin-top: 10px;
+  }
+  
+  .upload-button:enabled {
+    background-color: blue;
+  }
+  
+  .upload-button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+
+  .recording {
+    background-color: darkred !important;
+  }

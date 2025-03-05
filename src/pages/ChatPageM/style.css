@@ -1,10 +1,10 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 전체 화면을 채우도록 설정 */
+  height: 100vh; 
   background-color: white;
-  width: 375px; /* 아이폰 가로 크기 */
-  margin: 0 auto; /* 화면 중앙 정렬 */
+  width: 375px; 
+  margin: 0 auto; 
   position: relative; /* 입력창을 기준으로 높이 설정 */
 }
 
