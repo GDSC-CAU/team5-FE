@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageCircle, ClipboardList, AlertCircle } from "lucide-react";
+import { MessageCircle, User, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 
@@ -9,15 +9,15 @@ export default function BottomNav() {
   return (
     <div className="bottom-nav">
       <div className="nav-item">
-        <MessageCircle />
+        <MessageCircle onClick={() => navigate("/managerChat")} />
         <span>채팅</span>
       </div>
       <div className="nav-item">
-        <ClipboardList onClick={() => navigate("/Staff")} />
-        <span>할일</span>
+        <User onClick={() => navigate("/staff")} />
+        <span>직원</span>
       </div>
       <div className="nav-item">
-        <AlertCircle onClick={() => navigate("/report")} />
+        <AlertCircle onClick={() => navigate("/reportList")} />
         <span>신고</span>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./style.css"; // 스타일 적용
 import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
+import { useNavigate } from "react-router-dom";
 
 // 현재 날짜를 "YYYY년 MM월 DD일 (요일)" 형식으로 변환하는 함수
 const getCurrentDate = () => {
@@ -26,6 +27,8 @@ const getCurrentTime = () => {
 };
 
 export default function ChatPage() {
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -87,7 +90,7 @@ export default function ChatPage() {
     <div className="chat-container">
       {/* 상단 네비게이션 */}
       <div className="chat-header">
-        <ArrowLeft className="back-icon" />
+        <ArrowLeft className="back-icon" onClick={() => navigate(-1)} />
         <h1 className="chat-title">"Q-Company 2025"</h1>
       </div>
 

@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh; 
   background-color: white;
-  width: 375px; 
+  width: 430px; 
   margin: 0 auto; 
   position: relative; /* 입력창을 기준으로 높이 설정 */
 }

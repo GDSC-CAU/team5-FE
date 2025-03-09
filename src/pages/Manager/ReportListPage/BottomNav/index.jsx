@@ -9,15 +9,15 @@ export default function BottomNav() {
   return (
     <div className="bottom-nav">
       <div className="nav-item">
-        <MessageCircle />
+        <MessageCircle onClick={() => navigate("/managerChat")} />
         <span>채팅</span>
       </div>
       <div className="nav-item">
-        <User onClick={() => navigate("/Staff")} />
+        <User onClick={() => navigate("/staff")} />
         <span>직원</span>
       </div>
       <div className="nav-item">
-        <AlertCircle />
+        <AlertCircle onClick={() => navigate("/reportList")} />
         <span>신고</span>
       </div>
     </div>
