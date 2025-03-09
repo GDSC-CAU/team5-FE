@@ -68,7 +68,7 @@ const ChatList = () => {
     const confirmDelete = window.confirm("이 채팅을 삭제하시겠습니까?");
     if (confirmDelete) {
       try {
-        await axios.delete(`${API_HOST}/chat/delete/${teamId}`);
+        await axios.delete(`${API_HOST}/teams/{teamId}`);
         setChatRooms(chatRooms.filter(chat => chat.teamId !== teamId));
         setSelectedChat(null);
       } catch (error) {
