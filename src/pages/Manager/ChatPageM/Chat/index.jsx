@@ -5,9 +5,10 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import "./style.css";
 import { ArrowLeft } from "lucide-react";
+import API_HOST from "../../../../constants/ApiHost";
 
 // ✅ WebSocket 연결 주소
-const SOCKET_URL = "http://localhost:8080/ws-connect";
+const SOCKET_URL = API_HOST + "/ws-connect";
 
 // ✅ 현재 날짜를 "YYYY년 MM월 DD일 (요일)" 형식으로 변환하는 함수
 const getCurrentDate = () => {
@@ -50,7 +51,7 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/chats/teams/${teamId}?userId=${userId}`);
+        const response = await axios.get(`${API_HOST}/chats/teams/${teamId}?userId=${userId}`);
         setMessages(response.data.result.messages.reverse()); // 최신 메시지가 아래에 오도록 정렬
       } catch (error) {
         console.error("메시지 로딩 오류:", error);

@@ -5,6 +5,7 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import ChatItem from "../ChatItem";
 import "./style.css";
+import API_HOST from "../../../../constants/ApiHost";
 
 const ChatList = () => {
   const userId = localStorage.getItem("userId");
@@ -17,7 +18,7 @@ const ChatList = () => {
   useEffect(() => {
     const fetchUserTeams = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/user-teams/users/${userId}`);
+        const response = await axios.get(`${API_HOST}/user-teams/users/${userId}`);
         console.log("채팅방 데이터:", response.data);
         setChatRooms(response.data.result);
       } catch (error) {
@@ -26,7 +27,7 @@ const ChatList = () => {
     };
 
     const connectWebSocket = () => {
-      const socket = new SockJS("http://localhost:8080/ws-connect");
+      const socket = new SockJS(`${API_HOST}/ws-connect`);
       stompClient.current = Stomp.over(socket);
       stompClient.current.connect({}, () => {
         stompClient.current.subscribe(`/sub/teams/${userId}`, (message) => {
@@ -67,7 +68,7 @@ const ChatList = () => {
     const confirmDelete = window.confirm("이 채팅을 삭제하시겠습니까?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:8080/chat/delete/${teamId}`);
+        await axios.delete(`${API_HOST}/chat/delete/${teamId}`);
         setChatRooms(chatRooms.filter(chat => chat.teamId !== teamId));
         setSelectedChat(null);
       } catch (error) {

@@ -1,60 +1,92 @@
-import React, { useState } from "react";
-import BottomNav from "./BottomNav"; 
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import BottomNav from "./BottomNav";
 import NavBar from "./NavBar";
-import "./style.css"; 
+import "./style.css";
+import API_HOST from "../../../constants/ApiHost";
 
 export default function StaffPage() {
-  const [members, setMembers] = useState([
-    { id: 1, name: "토니", english: "TONY", img: "/profile1.png" },
-    { id: 2, name: "패트릭", english: "PATRICK", img: "/profile2.png" },
-    { id: 3, name: "스티븐", english: "STEVEN", img: "/profile3.png" },
-    { id: 4, name: "티모시", english: "TIMOTHY", img: "/profile4.png" },
-  ]);
-
+  const [members, setMembers] = useState([]); // 직원 리스트
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newMemberId, setNewMemberId] = useState("");
   const [isTemporary, setIsTemporary] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("직원");
 
-  // 모달 토글
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const adminId = localStorage.getItem("userId"); // ✅ 관리자 ID 저장
 
-  // 직원 추가
-  const handleAddMember = () => {
+  // ✅ 서버에서 직원 리스트 가져오기
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(`https://safebridge.site/test-api/admin/{adminId}/employees`);
+        if (response.data.isSuccess) {
+          setMembers(response.data.result.employees);
+        } else {
+          alert("직원 목록을 불러오는데 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("직원 목록 불러오기 실패:", error);
+      }
+    };
+
+    fetchMembers();
+  }, [adminId]);
+
+  // ✅ 직원 추가 API 요청
+  const handleAddMember = async () => {
     if (!newMemberId.trim()) {
       alert("아이디를 입력하세요.");
       return;
     }
 
-    const newMember = {
-      id: members.length + 1,
-      name: newMemberId,
-      english: newMemberId.toUpperCase(),
-      img: "/default_profile.png",
-      isTemporary,
-    };
+    try {
+      const response = await axios.post(`${API_HOST}/employees/add`, {
+        adminId,
+        userId: newMemberId,
+        isTemporary,
+      });
 
-    setMembers([...members, newMember]);
-    setNewMemberId(""); 
-    setIsTemporary(false);
-    setIsModalOpen(false);
+      if (response.data.isSuccess) {
+        alert("직원 추가 성공!");
+        setMembers([...members, { userId: newMemberId, name: newMemberId }]);
+        setNewMemberId("");
+        setIsTemporary(false);
+        setIsModalOpen(false);
+      } else {
+        alert("직원 추가 실패: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("직원 추가 오류:", error);
+      alert("직원 추가 중 오류가 발생했습니다.");
+    }
   };
 
-  // 직원 삭제 모드 토글
-  const toggleDeleteMode = () => setIsDeleteMode(!isDeleteMode);
+  // ✅ 직원 삭제 API 요청
+  const deleteMember = async (userId) => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
 
-  // 직원 삭제
-  const deleteMember = (id) => {
-    setMembers(members.filter(member => member.id !== id));
+    try {
+      const response = await axios.delete(`${API_HOST}/employees/${userId}`);
+      if (response.data.isSuccess) {
+        alert("직원 삭제 성공!");
+        setMembers(members.filter((member) => member.userId !== userId));
+      } else {
+        alert("직원 삭제 실패: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("직원 삭제 오류:", error);
+      alert("직원 삭제 중 오류가 발생했습니다.");
+    }
   };
 
   return (
     <div className="chat-page">
       {/* 네비게이션 바 */}
-      <NavBar 
-        onAddClick={toggleModal} 
-        onToggleDeleteMode={toggleDeleteMode} 
+      <NavBar
+        onAddClick={() => setIsModalOpen(true)}
+        onToggleDeleteMode={() => setIsDeleteMode(!isDeleteMode)}
         isDeleteMode={isDeleteMode}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
@@ -63,14 +95,14 @@ export default function StaffPage() {
       {/* 직원 리스트 */}
       <div className={`member-list ${isDeleteMode ? "delete-mode" : ""}`}>
         {members.map((member) => (
-          <div key={member.id} className="member-item">
+          <div key={member.userId} className="member-item">
             {isDeleteMode && (
-              <button className="delete-button" onClick={() => deleteMember(member.id)}>✕</button>
+              <button className="delete-button" onClick={() => deleteMember(member.userId)}>
+                ✕
+              </button>
             )}
-            <img src={member.img} alt={member.name} className="member-img" />
-            <span className="member-name">
-              {member.name} ({member.english})
-            </span>
+            <img src="/default_profile.png" alt={member.name} className="member-img" />
+            <span className="member-name">{member.name}</span>
           </div>
         ))}
       </div>
@@ -79,7 +111,7 @@ export default function StaffPage() {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button className="close-btn" onClick={toggleModal}>✖</button>
+            <button className="close-btn" onClick={() => setIsModalOpen(false)}>✖</button>
             <div className="profile-placeholder">👤</div>
             <h3>아이디로 추가하기</h3>
 
