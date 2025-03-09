@@ -1,25 +1,55 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { login } from '../../../features/user'
-import './style.css'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./style.css";
 
 const LoginForm = () => {
-  const navigate = useNavigate()
-  const [id, setId] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const navigate = useNavigate();
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const result = await login(id, password)
+    e.preventDefault();
 
-    if (result) {
-      alert('로그인 성공')
-      navigate('/main')
-    } else {
-      alert('로그인에 실패했습니다.')
+    if (!id.trim() || !password.trim()) {
+      setError("아이디와 비밀번호를 입력해주세요.");
+      return;
     }
-  }
+
+    try {
+      const response = await axios.post(
+        "https://safebridge.site/test-api/auth/login",
+        { loginId: id, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (response.data.isSuccess) {
+        const { id: userId, role, token } = response.data.result;
+
+        //JWT 토큰 & 유저 정보 저장
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("role", role);
+        localStorage.setItem("token", token);
+
+        alert("로그인 성공!");
+
+        //role에 따라 페이지 이동
+        if (role === "ADMIN") {
+          navigate("/managerChat");
+        } else if (role === "MEMBER") {
+          navigate("/staffChat");
+        } else {
+          setError("알 수 없는 사용자 역할입니다.");
+        }
+      } else {
+        setError(response.data.message || "로그인 실패");
+      }
+    } catch (error) {
+      console.error("로그인 오류:", error);
+      setError("로그인 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <form className="login__form" onSubmit={handleSubmit}>
@@ -39,14 +69,14 @@ const LoginForm = () => {
       />
       {error && <p className="error">{error}</p>}
       <button className="BodyS" type="submit">로그인</button>
-      <button className="BodyS" type="button" onClick={() => navigate('/manegesignup')}>
+      <button className="BodyS" type="button" onClick={() => navigate("/manegesignup")}>
         관리자 회원가입
       </button>
-      <button className="BodyS" type="button" onClick={() => navigate('/staffsignup')}>
+      <button className="BodyS" type="button" onClick={() => navigate("/staffsignup")}>
         근로자 회원가입
       </button>
     </form>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

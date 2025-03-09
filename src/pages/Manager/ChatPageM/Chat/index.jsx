@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./style.css"; // 스타일 적용
-import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import "./style.css";
+import { ArrowLeft } from "lucide-react";
 
-// 현재 날짜를 "YYYY년 MM월 DD일 (요일)" 형식으로 변환하는 함수
+// ✅ WebSocket 연결 주소
+const SOCKET_URL = "http://localhost:8080/ws-connect";
+
+// ✅ 현재 날짜를 "YYYY년 MM월 DD일 (요일)" 형식으로 변환하는 함수
 const getCurrentDate = () => {
   const now = new Date();
   const year = now.getFullYear();
@@ -13,7 +19,7 @@ const getCurrentDate = () => {
   return `${year}년 ${month.toString().padStart(2, "0")}월 ${date.toString().padStart(2, "0")}일 (${day})`;
 };
 
-// 현재 시간을 "오전/오후 h:mm" 형식으로 변환하는 함수
+// ✅ 현재 시간을 "오전/오후 h:mm" 형식으로 변환하는 함수
 const getCurrentTime = () => {
   const now = new Date();
   let hours = now.getHours();
@@ -27,62 +33,74 @@ const getCurrentTime = () => {
 };
 
 export default function ChatPage() {
+  const { teamId } = useParams();
   const navigate = useNavigate();
+  const messagesEndRef = useRef(null);
+  const stompClient = useRef(null);
 
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: "admin",
-      name: "관리자",
-      img: "/admin_profile.png",
-      text: "다들 10시부터 공구리 깔아라",
-      time: getCurrentTime(),
-      date: getCurrentDate(),
-      showExplanation: false,
-    },
-    {
-      id: 2,
-      sender: "user",
-      name: "사용자",
-      text: "공구리 작업 시작합니다!",
-      time: getCurrentTime(),
-      date: getCurrentDate(),
-      showExplanation: false,
-    },
-  ]);
+  const userId = localStorage.getItem("userId");
+  const username = localStorage.getItem("username");
 
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const messagesEndRef = useRef(null); // ✅ 스크롤을 위한 Ref
+  const [translatedTexts, setTranslatedTexts] = useState(new Map());
+  const [visibleTexts, setVisibleTexts] = useState(new Map());
 
-  // ✅ 메시지 추가 시 자동 스크롤
+  // ✅ 서버에서 기존 메시지 불러오기
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/chats/teams/${teamId}?userId=${userId}`);
+        setMessages(response.data.result.messages.reverse()); // 최신 메시지가 아래에 오도록 정렬
+      } catch (error) {
+        console.error("메시지 로딩 오류:", error);
+      }
+    };
 
-  // "공구리" 클릭 시 설명 토글
-  const toggleExplanation = (id) => {
-    setMessages((prevMessages) =>
-      prevMessages.map((msg) =>
-        msg.id === id ? { ...msg, showExplanation: !msg.showExplanation } : msg
-      )
-    );
-  };
+    fetchMessages();
+  }, [teamId, userId]);
 
-  // 메시지 전송
+  // ✅ WebSocket 연결
+  useEffect(() => {
+    const connectWebSocket = () => {
+      const socket = new SockJS(SOCKET_URL);
+      stompClient.current = Stomp.over(socket);
+      stompClient.current.connect({}, () => {
+        stompClient.current.subscribe(`/sub/chats/${teamId}`, (message) => {
+          const newMessage = JSON.parse(message.body);
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+          setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        });
+
+        stompClient.current.subscribe(`/sub/translate/${teamId}/${userId}`, (message) => {
+          const { chatId, translatedText } = JSON.parse(message.body);
+          setTranslatedTexts((prevMap) => new Map(prevMap).set(chatId, translatedText));
+        });
+      });
+    };
+
+    connectWebSocket();
+
+    return () => {
+      if (stompClient.current) stompClient.current.disconnect();
+    };
+  }, [teamId, userId]);
+
+  // ✅ 메시지 전송
   const sendMessage = () => {
-    if (input.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        sender: "user",
-        name: "사용자",
-        text: input,
-        time: getCurrentTime(),
-        date: getCurrentDate(),
-        showExplanation: false,
+    if (stompClient.current && input.trim()) {
+      const messageBody = {
+        userId: userId,
+        name: username,
+        message: input.trim(),
+        todo: false,
       };
 
-      setMessages([...messages, newMessage]);
-      setInput(""); // 입력 필드 초기화
+      stompClient.current.send(`/pub/chats/teams/${teamId}`, {}, JSON.stringify(messageBody));
+      setInput("");
     }
   };
 
@@ -91,65 +109,54 @@ export default function ChatPage() {
       {/* 상단 네비게이션 */}
       <div className="chat-header">
         <ArrowLeft className="back-icon" onClick={() => navigate(-1)} />
-        <h1 className="chat-title">"Q-Company 2025"</h1>
+        <h1 className="chat-title">{`채팅방 - ${teamId}`}</h1>
       </div>
 
       {/* 채팅 메시지 목록 */}
       <div className="chat-messages">
-        {messages.map((msg) => (
-          <div key={msg.id} className={`chat-section ${msg.sender}`}>
-            {/* 관리자 메시지 */}
-            {msg.sender === "admin" && (
-              <>
-                <img src={msg.img} alt={msg.name} className="chat-profile" />
-                <div className="chat-content">
-                  <span className="chat-name">{msg.name}</span>
-                  <div className="chat-bubble">
-                    {msg.text.split("공구리").map((part, index, arr) => (
-                      <React.Fragment key={index}>
-                        {part}
-                        {index < arr.length - 1 && (
-                          <span
-                            className="highlight"
-                            onClick={() => toggleExplanation(msg.id)}
-                          >
-                            공구리
-                          </span>
-                        )}
-                      </React.Fragment>
-                    ))}
+        {messages.map((msg, index) => {
+          const chatId = msg.chatId;
+          const hasTranslation = translatedTexts.has(chatId);
+
+          return (
+            <div key={index} className={`chat-section ${msg.userId === userId ? "user" : "admin"}`}>
+              {/* 관리자 메시지 */}
+              {msg.userId !== userId && (
+                <>
+                  <img src={msg.img || "/admin_profile.png"} alt={msg.name} className="chat-profile" />
+                  <div className="chat-content">
+                    <span className="chat-name">{msg.name}</span>
+                    <div className="chat-bubble">{msg.message}</div>
+                    <span className="chat-time">{msg.sendTime || getCurrentTime()}</span>
+
+                    {/* 번역 버튼 */}
+                    {hasTranslation && (
+                      <button
+                        onClick={() => setVisibleTexts((prev) => new Map(prev).set(chatId, !prev.get(chatId)))}
+                        className="translate-btn"
+                      >
+                        {visibleTexts.get(chatId) ? "번역 숨기기" : "번역 보기"}
+                      </button>
+                    )}
+
+                    {/* 번역된 문장 표시 */}
+                    {visibleTexts.get(chatId) && hasTranslation && (
+                      <p className="translated-text">{translatedTexts.get(chatId)}</p>
+                    )}
                   </div>
-                  <span className="chat-time">{msg.time}</span>
+                </>
+              )}
 
-                  {/* 설명과 번역 */}
-                  {msg.showExplanation && (
-                    <div className="explanation-box">
-                      <p>💬 번역: Mọi người hãy đặt dụng cụ của mình xuống bắt đầu từ lúc 10 giờ.</p>
-                      <div className="explanation-content">
-                        <div>
-                          <p><strong>공구리</strong> = 콘크리트 (bê tông)</p>
-                          <p>콘크리트는 건축물의 기초를 다질 때 사용되는 재료입니다.</p>
-                        </div>
-                        <img src="/concrete.png" alt="공구리" className="explanation-image" />
-                      </div>
-                    </div>
-                  )}
+              {/* 사용자 메시지 */}
+              {msg.userId === userId && (
+                <div className="chat-content user">
+                  <div className="chat-bubble user-bubble">{msg.message}</div>
+                  <span className="chat-time">{msg.sendTime || getCurrentTime()}</span>
                 </div>
-              </>
-            )}
-
-            {/* 사용자 메시지 */}
-            {msg.sender === "user" && (
-              <div className="chat-content user">
-                <div className="chat-bubble user-bubble">
-                  {msg.text}
-                </div>
-                <span className="chat-time">{msg.time}</span>
-              </div>
-            )}
-          </div>
-        ))}
-        {/* ✅ 스크롤 자동 이동을 위한 빈 div */}
+              )}
+            </div>
+          );
+        })}
         <div ref={messagesEndRef}></div>
       </div>
 

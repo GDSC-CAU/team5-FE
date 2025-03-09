@@ -12,7 +12,7 @@ export default function Navbar() {
         <Menu className="menu-icon" />
         <h1 className="navbar-title">채팅</h1>
       </div>
-      <Plus className="plus-icon" onClick={() => navigate("/CreateChat")} />
+      <Plus className="plus-icon" onClick={() => navigate("/createChat")} />
     </nav>
   );
 }

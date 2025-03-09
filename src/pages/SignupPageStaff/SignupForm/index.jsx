@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './style.css';
-import { register } from '../../../features/user';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
@@ -8,9 +8,11 @@ const SignupForm = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [language, setLanguage] = useState(''); // 사용 언어
-  const [profileImage, setProfileImage] = useState(null); // 프로필 이미지
+  const [language, setLanguage] = useState('KOREAN'); // 기본값 KOREAN
+  const [profileImage, setProfileImage] = useState("C:/Users/Admin/GDG/src/assets/image/profile.png"); // 기본 프로필 이미지
+  const [error, setError] = useState('');
 
+  // 프로필 이미지 업로드
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -18,15 +20,31 @@ const SignupForm = () => {
     }
   };
 
+  // 회원가입 요청
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await register(userId, password, name, language, profileImage);
 
-    if (result) {
-      alert('회원가입 성공');
-      navigate('/staffChat');
-    } else {
-      alert('회원가입에 실패했습니다.');
+    try {
+      const response = await axios.post("https://safebridge.site/test-api/auth/user/signup", {
+        loginId: userId,
+        password,
+        name,
+        language
+      }, {
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (response.data.isSuccess) {
+        alert("회원가입 성공!");
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("회원가입 오류:", err);
+      if (err.response?.data?.code === "AUTH4003") {
+        setError("이미 존재하는 아이디입니다.");
+      } else {
+        setError("회원가입에 실패했습니다.");
+      }
     }
   };
 
@@ -34,11 +52,7 @@ const SignupForm = () => {
     <form className="signup__form" onSubmit={handleSubmit}>
       {/* 프로필 이미지 업로드 */}
       <label className="profile-upload">
-        {profileImage ? (
-          <img src={profileImage} alt="Profile Preview" className="profile-preview" />
-        ) : (
-          <div className="profile-placeholder">📷</div>
-        )}
+        <img src={profileImage} alt="Profile Preview" className="profile-preview" />
         <input type="file" accept="image/*" onChange={handleImageUpload} />
       </label>
 
@@ -46,7 +60,6 @@ const SignupForm = () => {
       <input
         className="BoldS"
         type="text"
-        name="username"
         placeholder="아이디"
         value={userId}
         onChange={(e) => setUserId(e.target.value)}
@@ -57,7 +70,6 @@ const SignupForm = () => {
       <input
         className="BoldS"
         type="password"
-        name="password"
         placeholder="비밀번호"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -68,27 +80,23 @@ const SignupForm = () => {
       <input
         className="BoldS"
         type="text"
-        name="name"
         placeholder="이름"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
       />
 
-      {/* 사용 언어 선택 */}
-      <select
-        className="BoldS"
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        required
-      >
-        <option value="">사용 언어 선택</option>
-        <option value="Korean">한국어</option>
-        <option value="English">English</option>
-        <option value="Vietnamese">Tiếng Việt</option>
-        <option value="Japanese">日本語</option>
-        <option value="Chinese">中文</option>
+      {/* 언어 선택 */}
+      <select className="BoldS" value={language} onChange={(e) => setLanguage(e.target.value)}>
+        <option value="KOREAN">한국어</option>
+        <option value="ENGLISH">영어</option>
+        <option value="VIETNAMESE">베트남어</option>
+        <option value="JAPANESE">일본어</option>
+        <option value="CHINESE">중국어</option>
       </select>
+
+      {/* 오류 메시지 */}
+      {error && <p className="error">{error}</p>}
 
       {/* 가입 버튼 */}
       <button className="BodyS" type="submit">가입하기</button>
