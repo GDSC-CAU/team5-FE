@@ -23,7 +23,7 @@ const SignupForm = () => {
 
     if (result) {
       alert('회원가입 성공');
-      navigate('/main');
+      navigate('/managerChat');
     } else {
       alert('회원가입에 실패했습니다.');
     }
