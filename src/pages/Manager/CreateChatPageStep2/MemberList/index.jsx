@@ -1,27 +1,30 @@
-import React, { useState } from "react";
-import "./style.css"; // 스타일 적용
+import React, { useState, useEffect } from "react";
+import "./style.css";
 
-// 더미 구성원 데이터
+// ✅ 더미 사용자 데이터
 const members = [
   { id: 1, name: "토니", english: "TONY", img: "/profile1.png" },
   { id: 2, name: "패트릭", english: "PATRICK", img: "/profile2.png" },
   { id: 3, name: "스티븐", english: "STEVEN", img: "/profile3.png" },
   { id: 4, name: "티모시", english: "TIMOTHY", img: "/profile4.png" },
-  { id: 5, name: "토니", english: "TONY", img: "/profile1.png" },
-  { id: 6, name: "패트릭", english: "PATRICK", img: "/profile2.png" },
 ];
 
-export default function MemberList() {
-  const [selectedMembers, setSelectedMembers] = useState([]); // 선택된 멤버 상태 저장
+export default function MemberList({ onSelect }) {
+  const [selectedMembers, setSelectedMembers] = useState([]);
 
-  // 멤버 클릭 시 선택/해제
+  // ✅ 멤버 선택/해제 함수
   const toggleSelect = (id) => {
     setSelectedMembers((prevSelected) =>
       prevSelected.includes(id)
-        ? prevSelected.filter((memberId) => memberId !== id) // 이미 선택됨 → 제거
-        : [...prevSelected, id] // 선택되지 않음 → 추가
+        ? prevSelected.filter((memberId) => memberId !== id) // ✅ 이미 선택됨 → 제거
+        : [...prevSelected, id] // ✅ 선택되지 않음 → 추가
     );
   };
+
+  // ✅ 선택한 멤버 목록을 부모 컴포넌트에 전달
+  useEffect(() => {
+    onSelect(selectedMembers);
+  }, [selectedMembers, onSelect]);
 
   return (
     <div className="member-select-list">
@@ -32,9 +35,7 @@ export default function MemberList() {
           onClick={() => toggleSelect(member.id)}
         >
           <img src={member.img} alt={member.name} className="member-select-img" />
-          <span className="member-select-name">
-            {member.name} ({member.english})
-          </span>
+          <span className="member-select-name">{member.name} ({member.english})</span>
         </div>
       ))}
     </div>
