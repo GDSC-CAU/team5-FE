@@ -4,6 +4,7 @@ import ManagerChatPage from "./pages/Manager/ManagerChatPage"; // ChatPage ì—°ê²
 import CreateChatPage from "./pages/Manager/CreateChatPage";
 import CreateChatPageStep2 from "./pages/Manager/CreateChatPageStep2";
 import ChatPageM from "./pages/Manager/ChatPageM";
+import ChatPageS from "./pages/Staff/ChatPageS";
 import StaffPage from "./pages/Manager/StaffPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPageManager from "./pages/SignupPageManager";
@@ -23,6 +24,7 @@ function App() {
           <Route path="/createChat" element={<CreateChatPage />} />
           <Route path="/createChat2" element={<CreateChatPageStep2 />} />
           <Route path="/chatM" element={<ChatPageM />} />
+          <Route path="/chatS" element={<ChatPageS />} />
           <Route path="/staff" element={<StaffPage />} />
           <Route path="/" element={<LoginPage />} />
           <Route path="/manegesignup" element={<SignupPageManager />} />

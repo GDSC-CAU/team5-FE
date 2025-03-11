@@ -145,21 +145,3 @@
   height: 80px;
   border-radius: 5px;
 }
-
-.todo-checkbox {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.todo-checkbox input {
-  margin-right: 5px;
-}
-
-.todo-task {
-  background-color: #f5f5dc;
-  border: 1px solid #e0c200;
-  font-weight: bold;
-}

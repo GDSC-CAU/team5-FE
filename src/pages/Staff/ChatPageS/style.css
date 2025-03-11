@@ -1,0 +1,67 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+  background-color: white;
+  width: 430px; 
+  margin: 0 auto; 
+  position: relative; /* 입력창을 기준으로 높이 설정 */
+}
+
+/* ✅ 채팅 메시지 목록 */
+.chat-messages {
+  flex: 1; /* 입력창을 제외한 나머지 공간을 모두 차지 */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto; /* 스크롤 가능 */
+  scroll-behavior: smooth;
+  padding-bottom: 70px; /*입력창과 겹치지 않도록 여백 추가 */
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: stretch; /* 🔹 세로 높이를 맞추도록 수정 */
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-top: 1px solid #ddd;
+  background-color: white;
+  width: 100%;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 375px;
+  height: 45px;
+}
+
+/* ✅ 입력창 */
+.chat-input {
+  flex-grow: 1;
+  padding: 5px;
+  font-size: 12px;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  height: 100%; /* ✅ 부모 높이에 맞춤 */
+  min-width: 0;
+}
+
+/* ✅ 전송 버튼 */
+.send-button {
+  padding: 8px 12px;
+  font-size: 10px;
+  color: white;
+  background-color: #006EFF;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 50px;
+  height: 100%; /* ✅ 부모 높이에 맞춤 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+}
