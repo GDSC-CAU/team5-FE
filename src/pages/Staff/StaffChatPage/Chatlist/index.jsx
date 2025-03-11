@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 const initialChatRooms = [
-  { id: 1, img: "/profile1.png", title: "Q-Company 2025", message: "주의사항 모두 정독 부탁드립니다.", time: "오후 10:00" },
-  { id: 2, img: "/profile2.png", title: "Q-Company Group A", message: "주의사항 모두 정독 부탁드립니다.", time: "오후 10:00" },
+  { id: 1, teamId: 101, img: "/profile1.png", title: "Q-Company 2025", message: "주의사항 모두 정독 부탁드립니다.", time: "오후 10:00" },
+  { id: 2, teamId: 102, img: "/profile2.png", title: "Q-Company Group A", message: "주의사항 모두 정독 부탁드립니다.", time: "오후 10:00" },
 ];
 
 export default function ChatList() {
@@ -36,7 +36,7 @@ export default function ChatList() {
           className="chat-item-container"
           onClick={() => {
             if (selectedChat !== chat.id) {
-              navigate("/chatM");
+              navigate(`/chat/${chat.teamId}`);
             }
           }}
           onContextMenu={(e) => {

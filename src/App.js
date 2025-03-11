@@ -34,6 +34,7 @@ function App() {
           <Route path="/staffChat" element={<StaffChatPage />} />
           <Route path="/checkList" element={<CheckListPage />} />
           <Route path="/chat/:teamId" element={<ChatPageM />} />
+          <Route path="/chat/:teamId" element={<ChatPageS />} />
         </Routes>
       </div>
     </Router>
