@@ -40,8 +40,8 @@ function App() {
             <Route path="/reportlist" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ReportListPage /></ProtectedRoute>} />
             <Route path="/staffChat" element={<ProtectedRoute allowedRoles={authenticatedRoles}><StaffChatPage /></ProtectedRoute>} />
             <Route path="/checkList" element={<ProtectedRoute allowedRoles={authenticatedRoles}><CheckListPage /></ProtectedRoute>} />
-            <Route path="/chat/:teamId" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ChatPageM /></ProtectedRoute>} />
-            <Route path="/chat/:teamId" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ChatPageS /></ProtectedRoute>} />
+            <Route path="/chat1/:teamId" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ChatPageM /></ProtectedRoute>} />
+            <Route path="/chat2/:teamId" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ChatPageS /></ProtectedRoute>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </div>
