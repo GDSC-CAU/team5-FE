@@ -1,30 +1,79 @@
-import React, { useState } from "react";
-import ChatItem from "../ChatItem";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import ChatItem from "../ChatItem";
 import "./style.css";
+import API_HOST from "../../../../constants/ApiHost";
 
-const initialChatRooms = [
-  { id: 1, teamId: 101, img: "/profile1.png", title: "Q-Company 2025", message: "주의사항 모두 정독 부탁드립니다.", time: "오후 10:00" },
-  { id: 2, teamId: 102, img: "/profile2.png", title: "Q-Company Group A", message: "주의사항 모두 정독 부탁드립니다.", time: "오후 10:00" },
-];
-
-export default function ChatList() {
+const ChatList = () => {
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
-  const [chatRooms, setChatRooms] = useState(initialChatRooms);
+  const [chatRooms, setChatRooms] = useState([]); // 서버에서 불러온 채팅방 데이터
   const [selectedChat, setSelectedChat] = useState(null);
+  const stompClient = useRef(null);
 
-  //채팅을 길게 누르거나 우클릭하면 삭제 버튼 표시
+  // 서버에서 채팅방 리스트 가져오기
+  useEffect(() => {
+    const fetchUserTeams = async () => {
+      try {
+        const response = await axios.get(`${API_HOST}/user-teams/users/${userId}`);
+        console.log("채팅방 데이터:", response.data);
+        setChatRooms(response.data.result);
+      } catch (error) {
+        console.error("채팅방 목록 불러오기 오류:", error);
+      }
+    };
+
+    const connectWebSocket = () => {
+      const socket = new SockJS(`${API_HOST}/ws-connect`);
+      stompClient.current = Stomp.over(socket);
+      stompClient.current.connect({}, () => {
+        stompClient.current.subscribe(`/sub/teams/${userId}`, (message) => {
+          const updatedChat = JSON.parse(message.body);
+          setChatRooms((prevChats) => {
+            const existingIndex = prevChats.findIndex(chat => chat.teamId === updatedChat.teamId);
+            let updatedChats = [...prevChats];
+            if (existingIndex !== -1) {
+              updatedChats[existingIndex] = { ...updatedChats[existingIndex], ...updatedChat };
+            } else {
+              updatedChats.push(updatedChat);
+            }
+            return updatedChats.sort((a, b) => b.lastChatTime - a.lastChatTime);
+          });
+        });
+      });
+    };
+
+    const disconnectWebSocket = () => {
+      if (stompClient.current) {
+        stompClient.current.disconnect();
+      }
+    };
+
+    fetchUserTeams();
+    connectWebSocket();
+    return () => disconnectWebSocket();
+  }, [userId]);
+
+  // 채팅을 길게 누르거나 우클릭하면 삭제 버튼 표시
   const handleLongPress = (id) => {
     setSelectedChat(id);
   };
 
-  //삭제 버튼 클릭 시 확인 후 삭제 (이동 X)
-  const handleDeleteChat = (id, event) => {
-    event.stopPropagation(); 
+  // 삭제 버튼 클릭 시 확인 후 삭제
+  const handleDeleteChat = async (teamId, event) => {
+    event.stopPropagation();
     const confirmDelete = window.confirm("이 채팅을 삭제하시겠습니까?");
     if (confirmDelete) {
-      setChatRooms(chatRooms.filter(chat => chat.id !== id));
-      setSelectedChat(null);
+      try {
+        await axios.delete(`${API_HOST}/teams/{teamId}`);
+        setChatRooms(chatRooms.filter(chat => chat.teamId !== teamId));
+        setSelectedChat(null);
+      } catch (error) {
+        console.error("채팅 삭제 오류:", error);
+      }
     }
   };
 
@@ -32,23 +81,28 @@ export default function ChatList() {
     <div className="chat-list">
       {chatRooms.map((chat) => (
         <div
-          key={chat.id}
+          key={chat.teamId}
           className="chat-item-container"
           onClick={() => {
-            if (selectedChat !== chat.id) {
-              navigate(`/chat/${chat.teamId}`);
+            if (selectedChat !== chat.teamId) {
+              navigate(`/chat2/${chat.teamId}`);
             }
           }}
           onContextMenu={(e) => {
             e.preventDefault();
-            handleLongPress(chat.id);
+            handleLongPress(chat.teamId);
           }}
         >
-          <ChatItem img={chat.img} title={chat.title} message={chat.message} time={chat.time} />
+          <ChatItem
+            img={chat.img || "/default-profile.png"}
+            title={`${chat.teamName} (${chat.numOfUsers})`}
+            message={chat.lastChat || "새로운 채팅이 없습니다."}
+            time={chat.lastChatTime || ""}
+          />
 
-          {/*선택된 채팅에만 삭제 버튼*/}
-          {selectedChat === chat.id && (
-            <button className="delete-chat-btn" onClick={(e) => handleDeleteChat(chat.id, e)}>
+          {/* 선택된 채팅에만 삭제 버튼 표시 */}
+          {selectedChat === chat.teamId && (
+            <button className="delete-chat-btn" onClick={(e) => handleDeleteChat(chat.teamId, e)}>
               삭제
             </button>
           )}
@@ -56,4 +110,6 @@ export default function ChatList() {
       ))}
     </div>
   );
-}
+};
+
+export default ChatList;

@@ -4,12 +4,16 @@ import axios from "axios";
 import NavBar from "./NavBar";
 import BottomNav from "./BottomNav";
 import "./style.css";
+import API_HOST from "../../../constants/ApiHost"; 
 
 export default function ReportPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const audioContext = useRef(new (window.AudioContext || window.webkitAudioContext)());
   const recorder = useRef(new Recorder(audioContext.current));
+
+  const userId = localStorage.getItem("userId"); 
+  const adminId = localStorage.getItem("adminId"); 
 
   // 녹음 시작
   const startRecording = async () => {
@@ -42,16 +46,24 @@ export default function ReportPage() {
     }
 
     const formData = new FormData();
-    formData.append("audio", audioBlob, "report-audio.wav");
+    formData.append("file", audioBlob, "report-audio.mp3");
+    formData.append("userId", userId); 
+    formData.append("adminId", adminId); 
 
     try {
-      await axios.post("/report", formData, {
+      const response = await axios.post(`${API_HOST}/report`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("🚨 신고가 접수되었습니다!");
+
+      if (response.data.isSuccess) {
+        alert("신고가 성공적으로 접수되었습니다!");
+        setAudioBlob(null);
+      } else {
+        alert("신고 접수 실패: " + response.data.message);
+      }
     } catch (error) {
       console.error("오디오 업로드 실패:", error);
-      alert("❌ 신고 접수 중 오류가 발생했습니다.");
+      alert("⚠️ 서버 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 

@@ -1,4 +1,4 @@
-.report-list-page {
+.check-list-page {
     width: 430px; 
     height: 812px; 
     max-width: 100%;
@@ -11,7 +11,7 @@
     flex-direction: column;
   }
   
-  .report-list {
+  .check-list {
     flex-grow: 1;
     width: 100%;
     display: flex;
@@ -19,31 +19,35 @@
     justify-content: start;
   }
   
-  .report-item {
+  .check-item {
     background: white;
     padding: 12px;
     margin-bottom: 10px;
     border-bottom: 1px solid #ddd;
   }
   
-  .report-title {
+  .check-title {
     font-weight: bold;
     font-size: 16px;
     margin-bottom: 5px;
   }
 
-  .report-info {
+  .check-info {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
     color: gray;
   }
   
-  .report-label {
+  .check-label {
     font-weight: bold;
   }
   
-  .report-date {
+  .check-date {
     text-align: right;
+  }
+
+  .no-check-message{
+    margin: auto auto;
   }
   

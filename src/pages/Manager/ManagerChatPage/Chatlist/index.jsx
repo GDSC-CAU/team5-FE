@@ -85,7 +85,7 @@ const ChatList = () => {
           className="chat-item-container"
           onClick={() => {
             if (selectedChat !== chat.teamId) {
-              navigate(`/chat/${chat.teamId}`);
+              navigate(`/chat1/${chat.teamId}`);
             }
           }}
           onContextMenu={(e) => {

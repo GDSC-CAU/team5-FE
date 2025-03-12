@@ -7,10 +7,10 @@ import "./style.css";
 import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
 
-// ✅ WebSocket 연결 주소
+// WebSocket 연결 주소
 const SOCKET_URL = API_HOST + "/ws-connect";
 
-// ✅ 현재 날짜를 "YYYY년 MM월 DD일 (요일)" 형식으로 변환하는 함수
+// 현재 날짜를 "YYYY년 MM월 DD일 (요일)" 형식으로 변환하는 함수
 const getCurrentDate = () => {
   const now = new Date();
   const year = now.getFullYear();
@@ -20,7 +20,7 @@ const getCurrentDate = () => {
   return `${year}년 ${month.toString().padStart(2, "0")}월 ${date.toString().padStart(2, "0")}일 (${day})`;
 };
 
-// ✅ 현재 시간을 "오전/오후 h:mm" 형식으로 변환하는 함수
+// 현재 시간을 "오전/오후 h:mm" 형식으로 변환하는 함수
 const getCurrentTime = () => {
   const now = new Date();
   let hours = now.getHours();
@@ -47,7 +47,7 @@ export default function ChatPage() {
   const [translatedTexts, setTranslatedTexts] = useState(new Map());
   const [visibleTexts, setVisibleTexts] = useState(new Map());
 
-  // ✅ 서버에서 기존 메시지 불러오기
+  // 서버에서 기존 메시지 불러오기
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -61,7 +61,7 @@ export default function ChatPage() {
     fetchMessages();
   }, [teamId, userId]);
 
-  // ✅ WebSocket 연결
+  // WebSocket 연결
   useEffect(() => {
     const connectWebSocket = () => {
       const socket = new SockJS(SOCKET_URL);
@@ -90,7 +90,7 @@ export default function ChatPage() {
     };
   }, [teamId, userId]);
 
-  // ✅ 메시지 전송
+  // 메시지 전송
   const sendMessage = () => {
     if (stompClient.current && input.trim()) {
       const messageBody = {

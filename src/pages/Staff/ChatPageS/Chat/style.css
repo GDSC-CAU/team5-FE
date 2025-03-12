@@ -145,3 +145,8 @@
   height: 80px;
   border-radius: 5px;
 }
+.translate-btn{
+  color: #006EFF;
+  cursor: pointer;
+  font-weight: bold;
+}
