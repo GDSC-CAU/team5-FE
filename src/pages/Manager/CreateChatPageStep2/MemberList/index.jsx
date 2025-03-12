@@ -1,16 +1,30 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./style.css";
-
-// ✅ 더미 사용자 데이터
-const members = [
-  { id: 1, name: "토니", english: "TONY", img: "/profile1.png" },
-  { id: 2, name: "패트릭", english: "PATRICK", img: "/profile2.png" },
-  { id: 3, name: "스티븐", english: "STEVEN", img: "/profile3.png" },
-  { id: 4, name: "티모시", english: "TIMOTHY", img: "/profile4.png" },
-];
+import API_HOST from "../../../../constants/ApiHost";
 
 export default function MemberList({ onSelect }) {
+  const [members, setMembers] = useState([]); // 직원 리스트 상태
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const adminId = localStorage.getItem("userId"); // 관리자 ID 가져오기
+
+  // ✅ 직원 리스트 가져오기
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(`${API_HOST}/admin/${adminId}/employees`);
+        if (response.data.isSuccess) {
+          setMembers(response.data.result.employees);
+        } else {
+          alert("직원 목록을 불러오는데 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("직원 목록 불러오기 실패:", error);
+      }
+    };
+
+    if (adminId) fetchMembers();
+  }, [adminId]);
 
   // ✅ 멤버 선택/해제 함수
   const toggleSelect = (id) => {
@@ -30,12 +44,12 @@ export default function MemberList({ onSelect }) {
     <div className="member-select-list">
       {members.map((member) => (
         <div
-          key={member.id}
-          className={`member-select-item ${selectedMembers.includes(member.id) ? "selected" : ""}`}
-          onClick={() => toggleSelect(member.id)}
+          key={member.userId}
+          className={`member-select-item ${selectedMembers.includes(member.userId) ? "selected" : ""}`}
+          onClick={() => toggleSelect(member.userId)}
         >
-          <img src={member.img} alt={member.name} className="member-select-img" />
-          <span className="member-select-name">{member.name} ({member.english})</span>
+          <img src="/default_profile.png" alt={member.name} className="member-select-img" />
+          <span className="member-select-name">{member.name}</span>
         </div>
       ))}
     </div>

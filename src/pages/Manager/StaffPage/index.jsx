@@ -19,7 +19,7 @@ export default function StaffPage() {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axios.get(`https://safebridge.site/test-api/admin/{adminId}/employees`);
+        const response = await axios.get(`${API_HOST}/admin/${adminId}/employees`);
         if (response.data.isSuccess) {
           setMembers(response.data.result.employees);
         } else {
@@ -30,7 +30,7 @@ export default function StaffPage() {
       }
     };
 
-    fetchMembers();
+    if (adminId) fetchMembers();
   }, [adminId]);
 
   // ✅ 직원 추가 API 요청
@@ -41,15 +41,14 @@ export default function StaffPage() {
     }
 
     try {
-      const response = await axios.post(`${API_HOST}/employees/add`, {
-        adminId,
+      const response = await axios.post(`${API_HOST}/admin/${adminId}/employees`, {
         userId: newMemberId,
-        isTemporary,
+        isTemporaryWorker: isTemporary,
       });
 
       if (response.data.isSuccess) {
         alert("직원 추가 성공!");
-        setMembers([...members, { userId: newMemberId, name: newMemberId }]);
+        setMembers([...members, { userId: newMemberId, name: response.data.result.name }]);
         setNewMemberId("");
         setIsTemporary(false);
         setIsModalOpen(false);
@@ -68,7 +67,7 @@ export default function StaffPage() {
     if (!confirmDelete) return;
 
     try {
-      const response = await axios.delete(`${API_HOST}/employees/${userId}`);
+      const response = await axios.delete(`${API_HOST}/admin/${adminId}/employees/${userId}`);
       if (response.data.isSuccess) {
         alert("직원 삭제 성공!");
         setMembers(members.filter((member) => member.userId !== userId));
