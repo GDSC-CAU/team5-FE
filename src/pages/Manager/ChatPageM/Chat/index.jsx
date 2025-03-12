@@ -6,6 +6,7 @@ import { Stomp } from "@stomp/stompjs";
 import "./style.css";
 import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
+import defaultAdminAvatarImg from "../../../../assets/image/default-admin-avatar.png"
 
 const SOCKET_URL = API_HOST + "/ws-connect";
 
@@ -100,7 +101,7 @@ const ChatPage = () => {
             <div key={index} className={`chat-section ${msg.userId === userId ? "user" : "admin"}`}>
               {msg.userId !== userId && (
                 <>
-                  <img src={msg.img || "/admin_profile.png"} alt={msg.name} className="chat-profile" />
+                  <img src={msg.img || defaultAdminAvatarImg} alt={msg.name} className="chat-profile" />
                   <div className="chat-content">
                     <span className="chat-name">{msg.name}</span>
                     <div className="chat-bubble">{msg.message}</div>

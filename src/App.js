@@ -34,7 +34,7 @@ function App() {
             <Route path="/chatS" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ChatPageS /></ProtectedRoute>} />
             <Route path="/staff" element={<ProtectedRoute allowedRoles={authenticatedRoles}><StaffPage /></ProtectedRoute>} />
             <Route path="/" element={<ProtectedRoute allowedRoles={guestRoles}><LoginPage /></ProtectedRoute>} />
-            <Route path="/manegesignup" element={<ProtectedRoute allowedRoles={guestRoles}><SignupPageManager /></ProtectedRoute>} />
+            <Route path="/managesignup" element={<ProtectedRoute allowedRoles={guestRoles}><SignupPageManager /></ProtectedRoute>} />
             <Route path="/staffsignup" element={<ProtectedRoute allowedRoles={guestRoles}><SignupPageStaff /></ProtectedRoute>} />
             <Route path="/report" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ReportPage /></ProtectedRoute>} />
             <Route path="/reportlist" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ReportListPage /></ProtectedRoute>} />

@@ -6,6 +6,7 @@ import { Stomp } from "@stomp/stompjs";
 import "./style.css";
 import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
+import defaultAdminAvatarImg from "../../../../assets/image/default-admin-avatar.png";
 
 // WebSocket 연결 주소
 const SOCKET_URL = API_HOST + "/ws-connect";
@@ -124,7 +125,7 @@ export default function ChatPage() {
               {/* 관리자 메시지 */}
               {msg.userId !== userId && (
                 <>
-                  <img src={msg.img || "/admin_profile.png"} alt={msg.name} className="chat-profile" />
+                  <img src={msg.img || defaultAdminAvatarImg} alt={msg.name} className="chat-profile" />
                   <div className="chat-content">
                     <span className="chat-name">{msg.name}</span>
                     <div className="chat-bubble">{msg.message}</div>

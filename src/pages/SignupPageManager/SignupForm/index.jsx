@@ -3,13 +3,14 @@ import './style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_HOST from "../../../constants/ApiHost";
+import defaultAdminAvatarImg from "../../../assets/image/default-admin-avatar.png";
 
 const SignupForm = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [profileImage, setProfileImage] = useState("/profile.png"); 
+  const [profileImage, setProfileImage] = useState(defaultAdminAvatarImg);
   const [error, setError] = useState('');
 
   // 프로필 이미지 업로드

@@ -73,7 +73,7 @@ const LoginForm = () => {
       />
       {error && <p className="error">{error}</p>}
       <button className="BodyS" type="submit">로그인</button>
-      <button className="BodyS" type="button" onClick={() => navigate("/manegesignup")}>
+      <button className="BodyS" type="button" onClick={() => navigate("/managesignup")}>
         관리자 회원가입
       </button>
       <button className="BodyS" type="button" onClick={() => navigate("/staffsignup")}>

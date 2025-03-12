@@ -3,6 +3,7 @@ import './style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_HOST from "../../../constants/ApiHost";
+import defaultAvatarImg from "../../../assets/image/default-avatar.png";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const SignupForm = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [language, setLanguage] = useState('KOREAN'); // 기본값 KOREAN
-  const [profileImage, setProfileImage] = useState("C:/Users/Admin/GDG/src/assets/image/profile.png"); // 기본 프로필 이미지
+  const [profileImage, setProfileImage] = useState(defaultAvatarImg); // 기본 프로필 이미지
   const [error, setError] = useState('');
 
   // 프로필 이미지 업로드
