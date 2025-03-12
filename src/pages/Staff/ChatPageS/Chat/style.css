@@ -57,12 +57,12 @@
   }
   
   /* 관리자 메시지 (왼쪽 정렬) */
-  .chat-section.admin {
+  .chat-section-admin {
     justify-content: flex-start;
   }
   
   /* 사용자 메시지 (오른쪽 정렬) */
-  .chat-section.user {
+  .chat-section-user {
     justify-content: flex-end;
     align-self: flex-end;
   }
@@ -144,9 +144,4 @@
   width: 80px;
   height: 80px;
   border-radius: 5px;
-}
-.translate-btn{
-  color: #006EFF;
-  cursor: pointer;
-  font-weight: bold;
 }

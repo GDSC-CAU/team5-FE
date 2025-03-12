@@ -132,7 +132,7 @@ const ChatPage = () => {
             checked={isTodo}
             onChange={() => setIsTodo(!isTodo)}
           />
-          <span></span>{/*span안에 글자 널어도됨 일단은 비워두겟음*/}
+          <span></span>{/*span안에 글자 널어도됨일단은*/}
         </label>
         <input
           type="text"
