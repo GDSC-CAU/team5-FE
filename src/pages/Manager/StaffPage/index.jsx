@@ -43,7 +43,7 @@ export default function StaffPage() {
 
     try {
       const response = await axios.post(`${API_HOST}/admin/${adminId}/employees`, {
-        userId: newMemberId,
+        loginId: newMemberId,
         isTemporaryWorker: isTemporary,
       });
 
