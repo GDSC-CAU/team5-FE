@@ -57,12 +57,12 @@
   }
   
   /* 관리자 메시지 (왼쪽 정렬) */
-  .chat-section-admin {
+  .chat-section.admin {
     justify-content: flex-start;
   }
   
   /* 사용자 메시지 (오른쪽 정렬) */
-  .chat-section-user {
+  .chat-section.user {
     justify-content: flex-end;
     align-self: flex-end;
   }

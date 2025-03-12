@@ -6,7 +6,6 @@ import { Stomp } from "@stomp/stompjs";
 import "./style.css";
 import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
-import defaultAdminAvatarImg from "../../../../assets/image/default-admin-avatar.png";
 
 const SOCKET_URL = API_HOST + "/ws-connect";
 
@@ -33,6 +32,7 @@ export default function ChatPage() {
         console.error("메시지 로딩 오류:", error);
       }
     };
+
     fetchMessages();
   }, [teamId, userId]);
 
@@ -44,6 +44,7 @@ export default function ChatPage() {
         stompClient.current.subscribe(`/sub/chats/${teamId}`, (message) => {
           const newMessage = JSON.parse(message.body);
           setMessages((prevMessages) => [...prevMessages, newMessage]);
+
           setTimeout(() => {
             messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
           }, 100);
@@ -77,11 +78,6 @@ export default function ChatPage() {
     }
   };
 
-  // 메시지를 클릭하면 번역된 문장 표시/숨김
-  const toggleTranslation = (chatId) => {
-    setVisibleTexts((prev) => new Map(prev).set(chatId, !prev.get(chatId)));
-  };
-
   return (
     <div className="chat-container">
       <div className="chat-header">
@@ -93,47 +89,30 @@ export default function ChatPage() {
         {messages.map((msg, index) => {
           const chatId = msg.chatId;
           const hasTranslation = translatedTexts.has(chatId);
+          const isUser = msg.name === username;
+          console.log("msg.name:", msg.name, "userId:", username, "isUser:", msg.name === username);
 
           return (
-            <div key={index} className={`chat-section-${msg.userId === userId ? "user" : "admin"}`}>
-              {msg.userId !== userId && (
+            <div key={index} className={`chat-section ${isUser ? "user" : "admin"}`}>
+              {!isUser && (
                 <>
-                  <img src={msg.img || defaultAdminAvatarImg} alt={msg.name} className="chat-profile" />
+                  <img src={msg.img || "/admin_profile.png"} alt={msg.name} className="chat-profile" />
                   <div className="chat-content">
                     <span className="chat-name">{msg.name}</span>
-                    <div 
-                      className="chat-bubble"
-                      onClick={() => hasTranslation && toggleTranslation(chatId)} // 메시지를 클릭하면 번역 표시/숨김
-                    >
-                      {msg.message}
-                    </div>
+                    <div className="chat-bubble">{msg.message}</div>
                     <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
-
-                    {/* 번역된 문장 표시 */}
-                    {visibleTexts.get(chatId) && hasTranslation && (
-                      <p className="translated-text">{translatedTexts.get(chatId)}</p>
-                    )}
                   </div>
                 </>
               )}
 
-              {msg.userId === userId && (
+              {isUser && (
                 <div className="chat-content user">
-                  <div 
-                    className="chat-bubble user-bubble"
-                    onClick={() => hasTranslation && toggleTranslation(chatId)} // 메시지를 클릭하면 번역 표시/숨김
-                  >
-                    {msg.message}
-                  </div>
+                  <div className="chat-bubble user-bubble">{msg.message}</div>
                   <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
-
-                  {/* 번역된 문장 표시 */}
-                  {visibleTexts.get(chatId) && hasTranslation && (
-                    <p className="explanation-box">{translatedTexts.get(chatId)}</p>
-                  )}
                 </div>
               )}
-            </div>
+</div>
+
           );
         })}
         <div ref={messagesEndRef}></div>
@@ -153,5 +132,6 @@ export default function ChatPage() {
         </button>
       </div>
     </div>
+    
   );
 }
