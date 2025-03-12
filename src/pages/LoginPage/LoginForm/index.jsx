@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./style.css";
+import {useAuth} from "../../../contexts/AuthContext";
+import API_HOST from "../../../constants/ApiHost";
+import UserRole from "../../../constants/UserRole";
 
 const LoginForm = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +23,7 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post(
-        "https://safebridge.site/test-api/auth/login",
+        `${API_HOST}/auth/login`,
         { loginId: id, password },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -32,12 +36,12 @@ const LoginForm = () => {
         localStorage.setItem("role", role);
         localStorage.setItem("token", token);
 
-        alert("로그인 성공!");
-
         //role에 따라 페이지 이동
-        if (role === "ADMIN") {
+        if (role === UserRole.ADMIN) {
+          login({userId: userId, token: token}, role);
           navigate("/managerChat");
-        } else if (role === "MEMBER") {
+        } else if (role === UserRole.MEMBER) {
+          login({userId: userId, token: token}, role);
           navigate("/staffChat");
         } else {
           setError("알 수 없는 사용자 역할입니다.");

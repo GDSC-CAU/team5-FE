@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_HOST from "../../../constants/ApiHost";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const SignupForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("https://safebridge.site/test-api/auth/admin/signup", {
+      const response = await axios.post(`${API_HOST}/auth/admin/signup`, {
         loginId: userId,
         password,
         name
