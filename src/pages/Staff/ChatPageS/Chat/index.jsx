@@ -6,6 +6,7 @@ import { Stomp } from "@stomp/stompjs";
 import "./style.css";
 import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
+import UserRole from "../../../../constants/UserRole";
 
 const SOCKET_URL = API_HOST + "/ws-connect";
 
@@ -26,7 +27,7 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`${API_HOST}/chats/teams/${teamId}?userId=${userId}`);
+        const response = await axios.get(`${API_HOST}/chats/teams/${teamId}?userId=${userId}&role=${UserRole.MEMBER}`);
         setMessages(response.data.result.messages.reverse());
       } catch (error) {
         console.error("메시지 로딩 오류:", error);
