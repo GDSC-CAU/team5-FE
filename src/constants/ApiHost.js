@@ -1,4 +1,4 @@
-const API_HOST = "http://localhost:8080";
+const API_HOST = "https://safebridge.site/test-api";
 
   
 export default API_HOST;
