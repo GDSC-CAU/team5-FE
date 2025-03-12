@@ -4,6 +4,7 @@ import BottomNav from "./BottomNav";
 import NavBar from "./NavBar";
 import "./style.css";
 import API_HOST from "../../../constants/ApiHost";
+import defaultProfileImage from '../../../assets/image/default-avatar.png';
 
 export default function StaffPage() {
   const [members, setMembers] = useState([]); // 직원 리스트
@@ -100,7 +101,7 @@ export default function StaffPage() {
                 ✕
               </button>
             )}
-            <img src="/default_profile.png" alt={member.name} className="member-img" />
+            <img src={defaultProfileImage} alt={member.name} className="member-img" />
             <span className="member-name">{member.name}</span>
           </div>
         ))}

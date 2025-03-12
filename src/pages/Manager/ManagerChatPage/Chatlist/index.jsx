@@ -6,6 +6,7 @@ import { Stomp } from "@stomp/stompjs";
 import ChatItem from "../ChatItem";
 import "./style.css";
 import API_HOST from "../../../../constants/ApiHost";
+import logoImg from "../../../../assets/image/Logo.png"
 
 const ChatList = () => {
   const userId = localStorage.getItem("userId");
@@ -94,7 +95,7 @@ const ChatList = () => {
           }}
         >
           <ChatItem
-            img={chat.img || "/default-profile.png"}
+            img={chat.img || logoImg}
             title={`${chat.teamName} (${chat.numOfUsers})`}
             message={chat.lastChat || "새로운 채팅이 없습니다."}
             time={chat.lastChatTime || ""}
