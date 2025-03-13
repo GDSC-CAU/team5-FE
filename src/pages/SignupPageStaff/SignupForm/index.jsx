@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import './style.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import API_HOST from "../../../constants/ApiHost";
 import defaultAvatarImg from "../../../assets/image/default-avatar.png";
+import LANGUAGE_POOL from "./language";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const SignupForm = () => {
         name,
         language
       }, {
-        headers: { "Content-Type": "application/json" }
+        headers: {"Content-Type": "application/json"}
       });
 
       if (response.data.isSuccess) {
@@ -50,59 +51,72 @@ const SignupForm = () => {
     }
   };
 
+  function filterLanguages(selectedValues, _languages) {
+    return _languages.filter(lang => selectedValues.includes(lang.value));
+  }
+
+  const languages = filterLanguages(
+      ['KOREAN',
+        'CHINESE_SIMPLIFIED',
+        'CHINESE_TRADITIONAL',
+        'ENGLISH',
+        'VIETNAMESE',
+        'TURKISH',
+        'MONGOLIAN'
+      ], LANGUAGE_POOL);
   return (
-    <form className="signup__form" onSubmit={handleSubmit}>
-      {/* 프로필 이미지 업로드 */}
-      <label className="profile-upload">
-        <img src={profileImage} alt="Profile Preview" className="profile-preview" />
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
-      </label>
+      <form className="signup__form" onSubmit={handleSubmit}>
+        {/* 프로필 이미지 업로드 */}
+        <label className="profile-upload">
+          <img src={profileImage} alt="Profile Preview"
+               className="profile-preview"/>
+          <input type="file" accept="image/*" onChange={handleImageUpload}/>
+        </label>
 
-      {/* 아이디 입력 */}
-      <input
-        className="BoldS"
-        type="text"
-        placeholder="아이디"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-        required
-      />
+        {/* 아이디 입력 */}
+        <input
+            className="BoldS"
+            type="text"
+            placeholder="아이디"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            required
+        />
 
-      {/* 비밀번호 입력 */}
-      <input
-        className="BoldS"
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+        {/* 비밀번호 입력 */}
+        <input
+            className="BoldS"
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+        />
 
-      {/* 이름 입력 */}
-      <input
-        className="BoldS"
-        type="text"
-        placeholder="이름"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
+        {/* 이름 입력 */}
+        <input
+            className="BoldS"
+            type="text"
+            placeholder="이름"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+        />
 
-      {/* 언어 선택 */}
-      <select className="BoldS" value={language} onChange={(e) => setLanguage(e.target.value)}>
-        <option value="KOREAN">한국어</option>
-        <option value="ENGLISH">영어</option>
-        <option value="VIETNAMESE">베트남어</option>
-        <option value="JAPANESE">일본어</option>
-        <option value="CHINESE">중국어</option>
-      </select>
+        {/* 언어 선택 */}
+        <select className="BoldS" value={language}
+                onChange={(e) => setLanguage(e.target.value)}>
+          {languages.map((lang) => (
+              <option key={lang.value} value={lang.value}>{lang.label}</option>
+          ))}
+        </select>
 
-      {/* 오류 메시지 */}
-      {error && <p className="error">{error}</p>}
+        {/* 오류 메시지 */}
+        {error && <p className="error">{error}</p>}
 
-      {/* 가입 버튼 */}
-      <button className="BodyS" type="submit">가입하기</button>
-    </form>
+        {/* 가입 버튼 */}
+        <button className="BodyS" type="submit">가입하기</button>
+      </form>
   );
 };
 

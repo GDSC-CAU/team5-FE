@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./style.css";
 import API_HOST from "../../../../constants/ApiHost";
+import defaultImage from "../../../../assets/image/default-avatar.png"
 
 export default function MemberList({ onSelect }) {
   const [members, setMembers] = useState([]); // 직원 리스트 상태
@@ -48,7 +49,7 @@ export default function MemberList({ onSelect }) {
           className={`member-select-item ${selectedMembers.includes(member.userId) ? "selected" : ""}`}
           onClick={() => toggleSelect(member.userId)}
         >
-          <img src="/default_profile.png" alt={member.name} className="member-select-img" />
+          <img src={defaultImage} alt={member.name} className="member-select-img" />
           <span className="member-select-name">{member.name}</span>
         </div>
       ))}

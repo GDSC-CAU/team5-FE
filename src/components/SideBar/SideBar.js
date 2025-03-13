@@ -6,6 +6,7 @@ import {useAuth} from "../../contexts/AuthContext";
 import defaultImage from "../../assets/image/default-admin-avatar.png";
 import UserRole from "../../constants/UserRole";
 
+
 export default function MobileSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const {user, role, logout} = useAuth();
@@ -50,6 +51,12 @@ export default function MobileSidebar() {
             <button className="close-button" onClick={() => setIsOpen(false)}>
               <X size={24}/>
             </button>
+
+            <div className="logo-group">
+              <img src={process.env.PUBLIC_URL + "/logo.png"} alt="LinguaTalk Logo" className="logo" />
+              <h1 className="logo_text ">LinguaTalk</h1>
+            </div>
+
             <div className="profile-section">
               <img
                   src={defaultImage}

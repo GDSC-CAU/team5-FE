@@ -1,3 +1,7 @@
+:root {
+    --primary-color: #8B008B;
+    /* 웹사이트의 주된 색상으로 짙은 보라색(#8B008B)을 --primary-color라는 변수 이름으로 저장한다. */
+}
 .login__form {
     display: flex;
     flex-direction: column;
@@ -8,9 +12,15 @@
 .login__form input {
     border-radius: 8px;
     border: 1px solid #ccc;
-    padding: 10px;
-    margin: 5px 0;
-    width: 200px;
+    padding: 12px;
+    width: 220px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 기본 그림자 */
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.login__form input:focus {
+    border-color: #006EFF;
+    box-shadow: 0px 4px 8px rgba(0, 110, 255, 0.3); /* 포커스 시 강조 */
 }
     
 .login__form button {
@@ -20,8 +30,13 @@
 }
 
 .login-button {
+    font-weight: 500; /* 중간 굵기 */
+    font-size: 13px;
+    color: white; /* 기본 텍스트 색상 */
+    background: #006EFF;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
     display: flex;
-    background: var(--color-primary);
     align-items: center;
     justify-content: center;
     width: 320px;
@@ -33,7 +48,9 @@
     cursor: pointer;
 }
 
-/* 글자 색깔*/
-.login-button {
-    color: #006EFF;
+
+.login-button:hover {
+    background:  #0056cc;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* hover 시 그림자 강조 */
+    color: #f0f0f0; /* hover 시에도 너무 밝지 않게 유지 */
 }

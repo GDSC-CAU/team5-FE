@@ -7,6 +7,7 @@ import "./style.css";
 import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
 import UserRole from "../../../../constants/UserRole";
+import defaultImage from "../../../../assets/image/default-avatar.png";
 
 const SOCKET_URL = API_HOST + "/ws-connect";
 
@@ -103,7 +104,7 @@ export default function ChatPage() {
             <div key={index} className={`chat-section ${isUser ? "user" : "admin"}`}>
               {!isUser && (
                 <>
-                  <img src={msg.img || "/admin_profile.png"} alt={msg.name} className="chat-profile" />
+                  <img src={msg.img || defaultImage} alt={msg.name} className="chat-profile" />
                   <div className="chat-content">
                     <span className="chat-name">{msg.name}</span>
                     <div

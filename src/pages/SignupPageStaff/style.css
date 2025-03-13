@@ -10,3 +10,19 @@
   text-align: center;
   border: 1px solid #ddd;
 }
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 로고와 텍스트 사이 간격 조절 */
+}
+
+.logo {
+  width: 50px; /* 로고 크기 조절 */
+  height: auto;
+}
+
+.logo_text {
+  font-size: 2rem;
+  font-weight: bold;
+}

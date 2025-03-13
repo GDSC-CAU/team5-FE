@@ -60,6 +60,7 @@ const LoginForm = () => {
 
   return (
     <form className="login__form" onSubmit={handleSubmit}>
+      {error && <p className="error">{error}</p>}
       <input
         className="BoldS"
         type="text"
@@ -74,7 +75,6 @@ const LoginForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      {error && <p className="error">{error}</p>}
       <button className="login-button BodyS" type="submit">로그인</button>
       <button className="login-button BodyS" type="button" onClick={() => navigate("/managesignup")}>
         관리자 회원가입
