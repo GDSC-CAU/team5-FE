@@ -1,11 +1,24 @@
 import React, {useState, useEffect, useRef} from "react";
 import {Menu, X} from "lucide-react";
 import "./SideBar.css";
-import {CSSTransition} from "react-transition-group"; // 스타일 파일 분리
+import {CSSTransition} from "react-transition-group";
+import {useAuth} from "../../contexts/AuthContext";
+import defaultImage from "../../assets/image/default-admin-avatar.png";
+import UserRole from "../../constants/UserRole";
 
 export default function MobileSidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const {user, role, logout} = useAuth();
 
+  let roleDescription;
+
+  if (role === UserRole.ADMIN) {
+    roleDescription = "관리자";
+  }else if (role === UserRole.MEMBER) {
+    roleDescription = "근로자";
+  } else{
+    roleDescription = "알 수 없음";
+  }
   return (
       <>
         {/* 햄버거 버튼 */}
@@ -39,15 +52,15 @@ export default function MobileSidebar() {
             </button>
             <div className="profile-section">
               <img
-                  src="https://via.placeholder.com/100"
+                  src={defaultImage}
                   alt="프로필"
                   className="profile-image"
               />
-              <p className="role">관리자</p>
-              <p className="username">홍길동</p>
+              <p className="role">{roleDescription}</p>
+              <p className="username">{user.name}</p>
             </div>
             <button className="logout-button"
-                    onClick={() => setIsOpen(false)}>
+                    onClick={() => logout()}>
               로그아웃
             </button>
           </div>

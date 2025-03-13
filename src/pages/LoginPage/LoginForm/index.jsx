@@ -29,7 +29,7 @@ const LoginForm = () => {
       );
 
       if (response.data.isSuccess) {
-        const { id: userId, role, token } = response.data.result;
+        const { id: userId, name, role, token } = response.data.result;
 
         //JWT 토큰 & 유저 정보 저장
         localStorage.setItem("userId", userId);
@@ -38,10 +38,10 @@ const LoginForm = () => {
 
         //role에 따라 페이지 이동
         if (role === UserRole.ADMIN) {
-          login({userId: userId, token: token}, role);
+          login({userId: userId, token: token, name: name}, role);
           navigate("/managerChat");
         } else if (role === UserRole.MEMBER) {
-          login({userId: userId, token: token}, role);
+          login({userId: userId, token: token, name: name}, role);
           navigate("/staffChat");
         } else {
           setError("알 수 없는 사용자 역할입니다.");
