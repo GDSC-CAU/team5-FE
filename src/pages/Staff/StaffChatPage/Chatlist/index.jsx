@@ -96,7 +96,7 @@ const ChatList = () => {
         >
           <ChatItem
             img={chat.img || logoImg}
-            title={`${chat.teamName} (${chat.numOfUsers})`}
+            title={`${chat.teamName}`}
             message={chat.lastChat || "새로운 채팅이 없습니다."}
             time={chat.lastChatTime || ""}
           />

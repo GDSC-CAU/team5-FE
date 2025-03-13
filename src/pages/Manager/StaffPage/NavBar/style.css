@@ -1,11 +1,11 @@
-.navbar {
+.navbarStaff {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 가로 정렬 & 균등 분배 */
+  justify-content: space-between; /* 가로로 정렬 & 균등 분배 */
   padding: 10px 15px;
   background-color: white;
   border-bottom: 1px solid #ddd;
-  position: relative; /* 드롭다운 위치 설정을 위해 필요 */
+  height: 53px;
 }
 
 /* 햄버거 메뉴와 직원 드롭다운을 묶어줌 */
@@ -59,7 +59,6 @@
   background: #f1f1f1;
 }
 
-/* 플러스 버튼 */
 .plus-icon {
   font-size: 24px; /* 플러스 아이콘 크기 */
   cursor: pointer;

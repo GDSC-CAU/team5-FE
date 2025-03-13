@@ -1,13 +1,12 @@
-/* 전체 화면 크기를 아이폰 크기로 고정 */
 .chat-page {
-  width: 375px; /* iPhone 13, 14 기준 */
-  height: 812px; /* iPhone 13, 14 기준 */
+  width: 420px; 
+  height: 812px; 
   max-width: 100%;
   max-height: 100vh;
   margin: 0 auto; /* 가운데 정렬 */
-  background-color: #f8f9fa; /* 배경색 */
+  background-color: #f8f9fa;
   overflow: hidden;
-  border: 1px solid #ddd; /* 경계선 추가 (테스트용) */
+  border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
 }
@@ -17,8 +16,8 @@
   align-self: center;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  padding: 20px;
+  gap: 70px;
+  padding: 30px;
   justify-items: center;
 }
 

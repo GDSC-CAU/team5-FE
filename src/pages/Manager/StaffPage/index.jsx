@@ -14,9 +14,9 @@ export default function StaffPage() {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("직원");
 
-  const adminId = localStorage.getItem("userId"); // ✅ 관리자 ID 저장
+  const adminId = localStorage.getItem("userId"); // 관리자 ID 저장
 
-  // ✅ 서버에서 직원 리스트 가져오기
+  //  서버에서 직원 리스트 가져오기
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -34,7 +34,7 @@ export default function StaffPage() {
     if (adminId) fetchMembers();
   }, [adminId]);
 
-  // ✅ 직원 추가 API 요청
+  // 직원 추가 API 요청
   const handleAddMember = async () => {
     if (!newMemberId.trim()) {
       alert("아이디를 입력하세요.");
@@ -62,7 +62,7 @@ export default function StaffPage() {
     }
   };
 
-  // ✅ 직원 삭제 API 요청
+  // 직원 삭제 API 요청
   const deleteMember = async (userId) => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (!confirmDelete) return;

@@ -9,7 +9,7 @@ export default function Navbar({ onAddClick, onToggleDeleteMode, isDeleteMode })
   const categories = ["직원", "일용직", "정규직"];
 
   return (
-    <nav className="navbar">
+    <nav className="navbarStaff">
       <div className="navbar-left">
         <Menu className="menu-icon" />
         <div className="dropdown">
