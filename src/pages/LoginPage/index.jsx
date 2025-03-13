@@ -6,7 +6,6 @@ const LoginPage = () => {
     <div className="login__page">
       <h1 className="DisplayL">LinguaTalk</h1>
       <LoginForm />
-      <small className="BodyS">Team5</small>
     </div>
   )
 }

@@ -25,7 +25,15 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="app-container">
+        <div className="app-container"
+             style={{
+               backgroundImage: `url(${process.env.PUBLIC_URL + "/background.jpg"})`,
+               backgroundSize: "cover",
+               backgroundPosition: "center",
+               width: "100vw",
+               height: "100vh",
+             }}
+        >
           <Routes>
             <Route path="/managerChat" element={<ProtectedRoute allowedRoles={authenticatedRoles}><ManagerChatPage /></ProtectedRoute>} />
             <Route path="/createChat" element={<ProtectedRoute allowedRoles={authenticatedRoles}><CreateChatPage /></ProtectedRoute>} />
