@@ -16,7 +16,7 @@
   align-self: center;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 70px;
+  gap: 100px;
   padding: 30px;
   justify-items: center;
 }

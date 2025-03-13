@@ -24,7 +24,6 @@ const ChatPage = () => {
   const [input, setInput] = useState("");
   const [isTodo, setIsTodo] = useState(false); // "할 일" 체크박스 상태 추가
   const [translatedTexts, setTranslatedTexts] = useState(new Map());
-  const [visibleTexts, setVisibleTexts] = useState(new Map());
 
   // 서버에서 기존 메시지 불러오기
   useEffect(() => {

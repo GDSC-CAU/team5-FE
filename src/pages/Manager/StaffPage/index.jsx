@@ -16,6 +16,12 @@ export default function StaffPage() {
 
   const adminId = localStorage.getItem("userId"); // 관리자 ID 저장
 
+  const filteredMembers = members.filter((member) => {
+    if (selectedCategory === "일용직") return member.isTemporaryWorker === true;
+    if (selectedCategory === "정규직") return member.isTemporaryWorker === false;
+    return true; // "직원" 선택 시 전체 직원 반환
+  });
+
   //  서버에서 직원 리스트 가져오기
   useEffect(() => {
     const fetchMembers = async () => {
@@ -66,9 +72,16 @@ export default function StaffPage() {
   const deleteMember = async (userId) => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (!confirmDelete) return;
-
+  
     try {
-      const response = await axios.delete(`${API_HOST}/admin/${adminId}/employees/${userId}`);
+      const response = await axios.delete(`${API_HOST}/admin/${adminId}/employees`, {
+        data: {  //DELETE 요청의 바디 추가!
+          isDeleteAllTemporaryWorker: false,  // 개별 삭제 모드
+          userId: userId, // 삭제할 직원의 ID
+        },
+        headers: { "Content-Type": "application/json" }, // 헤더 설정 필수!
+      });
+  
       if (response.data.isSuccess) {
         alert("직원 삭제 성공!");
         setMembers(members.filter((member) => member.userId !== userId));
@@ -77,9 +90,31 @@ export default function StaffPage() {
       }
     } catch (error) {
       console.error("직원 삭제 오류:", error);
-      alert("직원 삭제 중 오류가 발생했습니다.");
+      alert("⚠️ 직원 삭제 중 오류가 발생했습니다.");
     }
   };
+
+const deleteAllTemporaryWorkers = async () => {
+  const confirmDelete = window.confirm("정말 모든 일용직 직원을 삭제하시겠습니까?");
+  if (!confirmDelete) return;
+
+  try {
+    const response = await axios.delete(`${API_HOST}/admin/${adminId}/employees`, {
+      data: { isDeleteAllTemporaryWorker: true }, // 전체 삭제 요청
+    });
+
+    if (response.data.isSuccess) {
+      alert("모든 일용직 직원이 삭제되었습니다!");
+      setMembers(members.filter(member => !member.isTemporaryWorker)); // 화면에서도 제거
+    } else {
+      alert("직원 삭제 실패: " + response.data.message);
+    }
+  } catch (error) {
+    console.error("직원 전체 삭제 오류:", error);
+    alert("⚠️ 직원 삭제 중 오류가 발생했습니다.");
+  }
+};
+  
 
   return (
     <div className="chat-page">
@@ -90,11 +125,12 @@ export default function StaffPage() {
         isDeleteMode={isDeleteMode}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+        onDeleteAllTemporaryWorkers={deleteAllTemporaryWorkers}
       />
 
       {/* 직원 리스트 */}
       <div className={`member-list ${isDeleteMode ? "delete-mode" : ""}`}>
-        {members.map((member) => (
+        {filteredMembers.map((member) => (
           <div key={member.userId} className="member-item">
             {isDeleteMode && (
               <button className="delete-button" onClick={() => deleteMember(member.userId)}>

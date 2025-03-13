@@ -44,6 +44,7 @@ export default function ChatPage() {
       stompClient.current.connect({}, () => {
         stompClient.current.subscribe(`/sub/chats/${teamId}`, (message) => {
           const newMessage = JSON.parse(message.body);
+          console.log("New WebSocket Message:", newMessage);
           setMessages((prevMessages) => [...prevMessages, newMessage]);
 
           setTimeout(() => {
@@ -74,6 +75,7 @@ export default function ChatPage() {
         todo: false,
       };
 
+      console.log("보내는 메시지:", messageBody);
       stompClient.current.send(`/pub/chats/teams/${teamId}`, {}, JSON.stringify(messageBody));
       setInput("");
     }
@@ -90,8 +92,8 @@ export default function ChatPage() {
         {messages.map((msg, index) => {
           const chatId = msg.chatId;
           const hasTranslation = translatedTexts.has(chatId);
-          const isUser = msg.name === username;
-          console.log("msg.name:", msg.name, "userId:", username, "isUser:", msg.name === username);
+          const isUser = msg.userId === userId;
+          console.log("msg.userId:", msg.userId, "userId:", userId, "isUser:", msg.userId === userId);
 
           return (
             <div key={index} className={`chat-section ${isUser ? "user" : "admin"}`}>
