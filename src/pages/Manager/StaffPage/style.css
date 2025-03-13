@@ -44,7 +44,6 @@
   font-weight: bold;
   margin-top: 8px;
 }
-
 /* 삭제 버튼 (X) */
 .delete-button {
   position: absolute;
@@ -53,9 +52,9 @@
   background: red;
   color: white;
   border: none;
-  border-radius: 50%;
-  width: 10px;
-  height: 30px;
+  border-radius: 50%; /* 완전히 동그랗게 */
+  width: 24px; /* 가로 크기 */
+  height: 24px; /* 세로 크기를 동일하게 설정 */
   font-size: 12px;
   display: flex;
   align-items: center;
@@ -103,7 +102,8 @@
 
 /* 닫기 버튼 */
 .close-btn {
-  position: absolute;
+  color: #006EFF;
+  position: relative;
   top: 10px;
   right: -130px;
   border: none;

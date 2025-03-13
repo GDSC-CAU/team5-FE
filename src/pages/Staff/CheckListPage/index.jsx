@@ -30,7 +30,7 @@ export default function ChatListPage() {
   }, [userId]);
 
   return (
-    <div className="check-list-page">
+    <div className="app-page check-list-page">
       <NavBar />
 
       {/* 리스트 컨테이너 */}

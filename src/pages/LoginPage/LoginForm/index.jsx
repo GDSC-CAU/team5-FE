@@ -29,7 +29,7 @@ const LoginForm = () => {
       );
 
       if (response.data.isSuccess) {
-        const { id: userId, role, token } = response.data.result;
+        const { id: userId, name, role, token } = response.data.result;
 
         //JWT 토큰 & 유저 정보 저장
         localStorage.setItem("userId", userId);
@@ -38,10 +38,10 @@ const LoginForm = () => {
 
         //role에 따라 페이지 이동
         if (role === UserRole.ADMIN) {
-          login({userId: userId, token: token}, role);
+          login({userId: userId, token: token, name: name}, role);
           navigate("/managerChat");
         } else if (role === UserRole.MEMBER) {
-          login({userId: userId, token: token}, role);
+          login({userId: userId, token: token, name: name}, role);
           navigate("/staffChat");
         } else {
           setError("알 수 없는 사용자 역할입니다.");
@@ -72,11 +72,11 @@ const LoginForm = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       {error && <p className="error">{error}</p>}
-      <button className="BodyS" type="submit">로그인</button>
-      <button className="BodyS" type="button" onClick={() => navigate("/managesignup")}>
+      <button className="login-button BodyS" type="submit">로그인</button>
+      <button className="login-button BodyS" type="button" onClick={() => navigate("/managesignup")}>
         관리자 회원가입
       </button>
-      <button className="BodyS" type="button" onClick={() => navigate("/staffsignup")}>
+      <button className="login-button BodyS" type="button" onClick={() => navigate("/staffsignup")}>
         근로자 회원가입
       </button>
     </form>
