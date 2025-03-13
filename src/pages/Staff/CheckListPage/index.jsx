@@ -14,8 +14,10 @@ export default function ChatListPage() {
     const fetchLists = async () => {
       try {
         const response = await axios.get(`${API_HOST}/chats/works?userId=${userId}`);
-        
+        console.log("API 응답 데이터:", response.data); // ✅ 응답 확인
+  
         if (response.data.isSuccess) {
+          console.log("할 일 리스트:", response.data.result);
           setLists(response.data.result); //서버 응답 데이터 설정
         } else {
           alert("리스트를 불러오는데 실패했습니다.");
@@ -25,7 +27,7 @@ export default function ChatListPage() {
         alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
       }
     };
-
+  
     fetchLists();
   }, [userId]);
 
