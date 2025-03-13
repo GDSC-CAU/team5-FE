@@ -74,7 +74,7 @@ const ChatPage = () => {
         userId: userId,
         name: username,
         message: input.trim(),
-        todo: isTodo, //할 일인지 여부 추가
+        isTodo: isTodo, //할 일인지 여부 추가
       };
       console.log("보내는 메시지:", messageBody);
 
