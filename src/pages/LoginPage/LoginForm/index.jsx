@@ -50,8 +50,11 @@ const LoginForm = () => {
         setError(response.data.message || "로그인 실패");
       }
     } catch (error) {
-      console.error("로그인 오류:", error);
-      setError("로그인 중 오류가 발생했습니다.");
+      let message = "로그인 중 오류가 발생했습니다.";
+      if (error.response.data.code) {
+        message = "잘못된 아이디 혹은 비밀번호 입니다.";
+      }
+      setError(message);
     }
   };
 
