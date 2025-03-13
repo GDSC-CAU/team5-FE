@@ -1,5 +1,5 @@
 .bottom-nav {
-  position: fixed;
+  position: absolute;
   display: flex;
   justify-content: space-around; /* 아이콘을 균등하게 배치 */
   align-items: center;
