@@ -68,7 +68,7 @@ export default function ReportPage() {
   };
 
   return (
-    <div className="report-page">
+    <div className="app-page report-page">
       <NavBar />
 
       <div className="report-content">

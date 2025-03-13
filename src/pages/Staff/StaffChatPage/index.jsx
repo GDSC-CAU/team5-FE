@@ -6,7 +6,7 @@ import "./style.css"; // 스타일 적용
 
 export default function ChatPage() {
   return (
-    <div className="chat-page">
+    <div className="app-page chat-page">
       <Navbar />
       <div className="chat-content">
         <ChatList />
