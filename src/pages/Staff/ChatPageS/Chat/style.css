@@ -128,10 +128,10 @@
 
 /* 설명 박스 */
 .explanation-box {
-  margin-top: 10px;
+  margin-top: 5px;
   padding: 10px;
   border-radius: 10px;
-  background-color: #E3F2FD;
+  background-color: #e3f2fd;
 }
 
 .explanation-content {

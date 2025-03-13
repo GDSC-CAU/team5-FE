@@ -16,19 +16,25 @@ export default function ChatPage() {
   const messagesEndRef = useRef(null);
   const stompClient = useRef(null);
 
-  const userId = localStorage.getItem("userId");
+  const userId = Number(localStorage.getItem("userId")); // 숫자로 변환하여 비교
   const username = localStorage.getItem("username");
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [translatedTexts, setTranslatedTexts] = useState(new Map());
   const [visibleTexts, setVisibleTexts] = useState(new Map());
 
+  // ✅ 서버에서 기존 메시지 불러오기
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`${API_HOST}/chats/teams/${teamId}?userId=${userId}&role=${UserRole.MEMBER}`);
-        setMessages(response.data.result.messages.reverse());
+        const response = await axios.get(
+          `${API_HOST}/chats/teams/${teamId}?userId=${userId}&role=${UserRole.MEMBER}`
+        );
+
+        if (response.data.isSuccess) {
+          const fetchedMessages = response.data.result.messages.reverse();
+          setMessages(fetchedMessages);
+        }
       } catch (error) {
         console.error("메시지 로딩 오류:", error);
       }
@@ -37,6 +43,7 @@ export default function ChatPage() {
     fetchMessages();
   }, [teamId, userId]);
 
+  // ✅ WebSocket 연결
   useEffect(() => {
     const connectWebSocket = () => {
       const socket = new SockJS(SOCKET_URL);
@@ -51,11 +58,6 @@ export default function ChatPage() {
             messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
           }, 100);
         });
-
-        stompClient.current.subscribe(`/sub/translate/${teamId}/${userId}`, (message) => {
-          const { chatId, translatedText } = JSON.parse(message.body);
-          setTranslatedTexts((prevMap) => new Map(prevMap).set(chatId, translatedText));
-        });
       });
     };
 
@@ -66,6 +68,7 @@ export default function ChatPage() {
     };
   }, [teamId, userId]);
 
+  // ✅ 메시지 전송
   const sendMessage = () => {
     if (stompClient.current && input.trim()) {
       const messageBody = {
@@ -83,17 +86,18 @@ export default function ChatPage() {
 
   return (
     <div className="chat-container">
+      {/* 🔹 상단 네비게이션 */}
       <div className="chat-header">
         <ArrowLeft className="back-icon" onClick={() => navigate(-1)} />
         <h1 className="chat-title">{`채팅방 - ${teamId}`}</h1>
       </div>
 
+      {/* 🔹 채팅 메시지 목록 */}
       <div className="chat-messages">
         {messages.map((msg, index) => {
           const chatId = msg.chatId;
-          const hasTranslation = translatedTexts.has(chatId);
-          const isUser = msg.userId === userId;
-          console.log("msg.userId:", msg.userId, "userId:", userId, "isUser:", msg.userId === userId);
+          const isUser = Number(msg.userId) === userId;
+          const hasTranslation = msg.translatedMessage && msg.translatedMessage.trim() !== "";
 
           return (
             <div key={index} className={`chat-section ${isUser ? "user" : "admin"}`}>
@@ -102,8 +106,26 @@ export default function ChatPage() {
                   <img src={msg.img || "/admin_profile.png"} alt={msg.name} className="chat-profile" />
                   <div className="chat-content">
                     <span className="chat-name">{msg.name}</span>
-                    <div className="chat-bubble">{msg.message}</div>
+                    <div
+                      className="chat-bubble"
+                      onClick={() => {
+                        if (!isUser && hasTranslation) {
+                          setVisibleTexts((prev) => new Map(prev).set(chatId, !prev.get(chatId)));
+                        }
+                      }}
+                    >
+                      {msg.message}
+                    </div>
                     <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
+
+                    {/* 🔹 번역된 메시지 표시 */}
+                    {visibleTexts.get(chatId) && hasTranslation && (
+                      <div className="explanation-box">
+                        <div className="explanation-content">
+                          <p>{msg.translatedMessage}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               )}
@@ -114,13 +136,13 @@ export default function ChatPage() {
                   <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
                 </div>
               )}
-</div>
-
+            </div>
           );
         })}
         <div ref={messagesEndRef}></div>
       </div>
 
+      {/* 🔹 입력창 */}
       <div className="chat-input-container">
         <input
           type="text"
@@ -135,6 +157,5 @@ export default function ChatPage() {
         </button>
       </div>
     </div>
-    
   );
 }

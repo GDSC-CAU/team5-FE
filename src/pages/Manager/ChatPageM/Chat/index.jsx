@@ -98,8 +98,8 @@ const ChatPage = () => {
           const hasTranslation = translatedTexts.has(chatId);
 
           return (
-            <div key={index} className={`chat-section ${msg.userId === userId ? "user" : "admin"}`}>
-              {msg.userId !== userId && (
+            <div key={index} className={`chat-section ${Number(msg.userId) === Number(userId) ? "user" : "admin"}`}>
+              {Number(msg.userId) !== Number(userId) && (
                 <>
                   <img src={msg.img || defaultAdminAvatarImg} alt={msg.name} className="chat-profile" />
                   <div className="chat-content">
@@ -110,7 +110,7 @@ const ChatPage = () => {
                 </>
               )}
 
-              {msg.userId === userId && (
+              {Number(msg.userId) === Number(userId) && (
                 <div className="chat-content user">
                   <div className={`chat-bubble user-bubble ${msg.todo ? "todo-task" : ""}`}>
                     {msg.message}
