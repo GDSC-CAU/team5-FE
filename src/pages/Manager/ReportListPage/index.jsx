@@ -11,7 +11,7 @@ const reports = [
 
 export default function ReportListPage() {
   return (
-    <div className="report-list-page">
+    <div className="app-page report-list-page">
       <NavBar />
 
       {/* 신고 리스트 컨테이너 */}

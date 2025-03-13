@@ -72,11 +72,11 @@ const LoginForm = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       {error && <p className="error">{error}</p>}
-      <button className="BodyS" type="submit">로그인</button>
-      <button className="BodyS" type="button" onClick={() => navigate("/managesignup")}>
+      <button className="login-button BodyS" type="submit">로그인</button>
+      <button className="login-button BodyS" type="button" onClick={() => navigate("/managesignup")}>
         관리자 회원가입
       </button>
-      <button className="BodyS" type="button" onClick={() => navigate("/staffsignup")}>
+      <button className="login-button BodyS" type="button" onClick={() => navigate("/staffsignup")}>
         근로자 회원가입
       </button>
     </form>

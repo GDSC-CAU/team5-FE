@@ -117,7 +117,7 @@ const deleteAllTemporaryWorkers = async () => {
   
 
   return (
-    <div className="chat-page">
+    <div className="chat-page app-page">
       {/* 네비게이션 바 */}
       <NavBar
         onAddClick={() => setIsModalOpen(true)}

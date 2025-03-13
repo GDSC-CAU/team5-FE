@@ -19,7 +19,7 @@
     width: 220px;
 }
 
-button {
+.login-button {
     display: flex;
     background: var(--color-primary);
     align-items: center;
@@ -34,6 +34,6 @@ button {
 }
 
 /* 글자 색깔*/
-button {
+.login-button {
     color: #006EFF;
 }
