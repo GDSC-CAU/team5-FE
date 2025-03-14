@@ -17,14 +17,31 @@ export default function ChatPage() {
   const messagesEndRef = useRef(null);
   const stompClient = useRef(null);
 
-  const userId = Number(localStorage.getItem("userId")); // 숫자로 변환하여 비교
+  const userId = Number(localStorage.getItem("userId"));
   const username = localStorage.getItem("username");
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [visibleTexts, setVisibleTexts] = useState(new Map());
 
-  // 서버에서 기존 메시지 불러오기
+  // 날짜 포맷 함수
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const isToday = date.toDateString() === now.toDateString();
+    const isYesterday =
+      new Date(now.setDate(now.getDate() - 1)).toDateString() === date.toDateString();
+
+    if (isToday) {
+      return `오늘 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    } else if (isYesterday) {
+      return `어제 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    } else {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    }
+  };
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -44,7 +61,6 @@ export default function ChatPage() {
     fetchMessages();
   }, [teamId, userId]);
 
-  // WebSocket 연결
   useEffect(() => {
     const connectWebSocket = () => {
       const socket = new SockJS(SOCKET_URL);
@@ -69,7 +85,6 @@ export default function ChatPage() {
     };
   }, [teamId, userId]);
 
-  // 메시지 전송
   const sendMessage = () => {
     if (stompClient.current && input.trim()) {
       const messageBody = {
@@ -117,7 +132,7 @@ export default function ChatPage() {
                     >
                       {msg.message}
                     </div>
-                    <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
+                    <span className="chat-time">{formatDate(msg.sendTime)}</span>
 
                     {/* 번역된 메시지 표시 */}
                     {visibleTexts.get(chatId) && hasTranslation && (
@@ -134,7 +149,7 @@ export default function ChatPage() {
               {isUser && (
                 <div className="chat-content user">
                   <div className="chat-bubble user-bubble">{msg.message}</div>
-                  <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
+                  <span className="chat-time">{formatDate(msg.sendTime)}</span>
                 </div>
               )}
             </div>

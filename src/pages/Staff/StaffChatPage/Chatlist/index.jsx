@@ -15,6 +15,24 @@ const ChatList = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const stompClient = useRef(null);
 
+  //날짜함수 추가
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const isToday = date.toDateString() === now.toDateString();
+    const isYesterday =
+      new Date(now.setDate(now.getDate() - 1)).toDateString() === date.toDateString();
+
+    if (isToday) {
+      return `오늘 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    } else if (isYesterday) {
+      return `어제 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    } else {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    }
+  };
+
   // 서버에서 채팅방 리스트 가져오기
   useEffect(() => {
     const fetchUserTeams = async () => {
@@ -98,7 +116,7 @@ const ChatList = () => {
             img={chat.img || logoImg}
             title={`${chat.teamName}`}
             message={chat.lastChat || "새로운 채팅이 없습니다."}
-            time={chat.lastChatTime || ""}
+            time={formatDate(chat.lastChatTime) || ""}
           />
 
           {/* 선택된 채팅에만 삭제 버튼 표시 */}

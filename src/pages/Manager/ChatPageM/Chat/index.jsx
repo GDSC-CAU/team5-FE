@@ -22,10 +22,27 @@ const ChatPage = () => {
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [isTodo, setIsTodo] = useState(false); // "할 일" 체크박스 상태 추가
+  const [isTodo, setIsTodo] = useState(false);
   const [translatedTexts, setTranslatedTexts] = useState(new Map());
 
-  // 서버에서 기존 메시지 불러오기
+  //날짜함수 추가
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const isToday = date.toDateString() === now.toDateString();
+    const isYesterday =
+      new Date(now.setDate(now.getDate() - 1)).toDateString() === date.toDateString();
+
+    if (isToday) {
+      return `오늘 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    } else if (isYesterday) {
+      return `어제 ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    } else {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
+    }
+  };
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -39,7 +56,6 @@ const ChatPage = () => {
     fetchMessages();
   }, [teamId, userId]);
 
-  // WebSocket 연결
   useEffect(() => {
     const connectWebSocket = () => {
       const socket = new SockJS(SOCKET_URL);
@@ -68,20 +84,19 @@ const ChatPage = () => {
     };
   }, [teamId, userId]);
 
-  // 메시지 전송
   const sendMessage = () => {
     if (stompClient.current && input.trim()) {
       const messageBody = {
         userId: userId,
         name: username,
         message: input.trim(),
-        isTodo: isTodo, //할 일인지 여부 추가
+        isTodo: isTodo,
       };
       console.log("보내는 메시지:", messageBody);
 
       stompClient.current.send(`/pub/chats/teams/${teamId}`, {}, JSON.stringify(messageBody));
       setInput("");
-      setIsTodo(false); //전송 후 체크박스 해제
+      setIsTodo(false);
     }
   };
 
@@ -107,7 +122,8 @@ const ChatPage = () => {
                   <div className="chat-content">
                     <span className="chat-name">{msg.name}</span>
                     <div className="chat-bubble">{msg.message}</div>
-                    <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
+                    {/*날짜*/}
+                    <span className="chat-time">{formatDate(msg.sendTime)}</span>
                   </div>
                 </>
               )}
@@ -117,7 +133,8 @@ const ChatPage = () => {
                   <div className={`chat-bubble user-bubble ${msg.todo ? "todo-task" : ""}`}>
                     {msg.message}
                   </div>
-                  <span className="chat-time">{msg.sendTime || new Date().toLocaleTimeString()}</span>
+                  {/*날짜*/}
+                  <span className="chat-time">{formatDate(msg.sendTime)}</span>
                 </div>
               )}
             </div>
@@ -134,7 +151,7 @@ const ChatPage = () => {
             checked={isTodo}
             onChange={() => setIsTodo(!isTodo)}
           />
-          <span></span>{/*span안에 글자 널어도됨일단은*/}
+          <span></span>
         </label>
         <input
           type="text"
