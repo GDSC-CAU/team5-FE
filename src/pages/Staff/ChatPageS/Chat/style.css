@@ -145,3 +145,11 @@
   height: 80px;
   border-radius: 5px;
 }
+
+.chat-container .loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* 부모 요소에서 차지하는 공간 설정 */
+  width: 100%;
+}

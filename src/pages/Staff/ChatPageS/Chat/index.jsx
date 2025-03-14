@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import API_HOST from "../../../../constants/ApiHost";
 import UserRole from "../../../../constants/UserRole";
 import defaultImage from "../../../../assets/image/default-avatar.png";
+import {MoonLoader} from "react-spinners";
 
 const SOCKET_URL = API_HOST + "/ws-connect";
 
@@ -24,6 +25,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [visibleTexts, setVisibleTexts] = useState(new Map());
   const [highlightedTerms, setHighlightedTerms] = useState(new Map());
+  const [isConnected, setIsConnected] = useState(false);
 
   // 날짜 포맷 함수
   const formatDate = (dateString) => {
@@ -68,6 +70,7 @@ export default function ChatPage() {
       const socket = new SockJS(SOCKET_URL);
       stompClient.current = Stomp.over(socket);
       stompClient.current.connect({}, () => {
+        setIsConnected(true);
         stompClient.current.subscribe(`/sub/chats/${teamId}`, (message) => {
           const newMessage = JSON.parse(message.body);
           console.log("New WebSocket Message:", newMessage);
@@ -159,86 +162,100 @@ export default function ChatPage() {
     </div>
 
     {/* 채팅 메시지 목록 */}
-    <div className="chat-messages">
-      {messages.map((msg, index) => {
-        const chatId = msg.chatId;
-        const isUser = Number(msg.userId) === userId;
-        const hasTranslation = msg.translatedMessage && msg.translatedMessage.trim() !== "";
-
-        return (
-          <div
-            key={index}
-            className={`chat-section ${isUser ? "user" : "admin"}`}
-            onClick={() => {
-              if (hasTranslation) {
-                setVisibleTexts((prev) => {
-                  const newMap = new Map(prev);
-                  newMap.set(chatId, !newMap.get(chatId));
-                  return newMap;
-                });
-              }
-            }}
-          >
-            {!isUser && (
-              <>
-                <img src={msg.img || defaultImage} alt={msg.name} className="chat-profile" />
-                <div className="chat-content">
-                  <span className="chat-name">{msg.name}</span>
-                  <div className="chat-bubble">
-                    {highlightTerms(msg.message, msg.translatedTerms, chatId)}
-                  </div>
-                  <span className="chat-time">{formatDate(msg.sendTime)}</span>
-
-                  {/* 번역된 단어 표시 */}
-                  {Array.from(highlightedTerms.entries()).map(([key, meaning]) => {
-                    const term = key.split('-').slice(2).join('-'); // 숫자 제거 후 단어만 표시
-                    return key.startsWith(`${chatId}-`) ? (
-                      <div key={key} className="explanation-box">
-                        <div className="explanation-content">
-                          <p><strong>{term}</strong>: {meaning}</p>
-                        </div>
-                      </div>
-                    ) : null;
-                  })}
-
-                  {/* 전체 번역된 메시지 표시 (하이라이팅 외 영역 클릭 시) */}
-                  {visibleTexts.get(chatId) && hasTranslation && (
-                    <div className="explanation-box">
-                      <div className="explanation-content">
-                        <p>{msg.translatedMessage}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
-            {isUser && (
-              <div className="chat-content user">
-                <div className="chat-bubble user-bubble">{msg.message}</div>
-                <span className="chat-time">{formatDate(msg.sendTime)}</span>
-              </div>
-            )}
+      {!isConnected ? (
+          <div className="loader-container">
+            <MoonLoader
+                color="black"
+                loading={!isConnected}
+                size={100}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+            />
           </div>
-        );
-      })}
-      <div ref={messagesEndRef}></div>
-    </div>
+      ) : (
+          <>
+            <div className="chat-messages">
+              {messages.map((msg, index) => {
+                const chatId = msg.chatId;
+                const isUser = Number(msg.userId) === userId;
+                const hasTranslation = msg.translatedMessage && msg.translatedMessage.trim() !== "";
 
-    {/*입력창을 chat-messages 바깥에 배치*/}
-    <div className="chat-input-container" onClick={(e) => e.stopPropagation()}>
-      <input
-        type="text"
-        className="chat-input"
-        placeholder="메시지를 입력하세요..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-      />
-      <button className="send-button" onClick={sendMessage}>
-        전송
-      </button>
-    </div>
+                return (
+                    <div
+                        key={index}
+                        className={`chat-section ${isUser ? "user" : "admin"}`}
+                        onClick={() => {
+                          if (hasTranslation) {
+                            setVisibleTexts((prev) => {
+                              const newMap = new Map(prev);
+                              newMap.set(chatId, !newMap.get(chatId));
+                              return newMap;
+                            });
+                          }
+                        }}
+                    >
+                      {!isUser && (
+                          <>
+                            <img src={msg.img || defaultImage} alt={msg.name} className="chat-profile" />
+                            <div className="chat-content">
+                              <span className="chat-name">{msg.name}</span>
+                              <div className="chat-bubble">
+                                {highlightTerms(msg.message, msg.translatedTerms, chatId)}
+                              </div>
+                              <span className="chat-time">{formatDate(msg.sendTime)}</span>
+
+                              {/* 번역된 단어 표시 */}
+                              {Array.from(highlightedTerms.entries()).map(([key, meaning]) => {
+                                const term = key.split('-').slice(2).join('-'); // 숫자 제거 후 단어만 표시
+                                return key.startsWith(`${chatId}-`) ? (
+                                    <div key={key} className="explanation-box">
+                                      <div className="explanation-content">
+                                        <p><strong>{term}</strong>: {meaning}</p>
+                                      </div>
+                                    </div>
+                                ) : null;
+                              })}
+
+                              {/* 전체 번역된 메시지 표시 (하이라이팅 외 영역 클릭 시) */}
+                              {visibleTexts.get(chatId) && hasTranslation && (
+                                  <div className="explanation-box">
+                                    <div className="explanation-content">
+                                      <p>{msg.translatedMessage}</p>
+                                    </div>
+                                  </div>
+                              )}
+                            </div>
+                          </>
+                      )}
+
+                      {isUser && (
+                          <div className="chat-content user">
+                            <div className="chat-bubble user-bubble">{msg.message}</div>
+                            <span className="chat-time">{formatDate(msg.sendTime)}</span>
+                          </div>
+                      )}
+                    </div>
+                );
+              })}
+              <div ref={messagesEndRef}></div>
+            </div>
+
+            {/*입력창을 chat-messages 바깥에 배치*/}
+            <div className="chat-input-container" onClick={(e) => e.stopPropagation()}>
+              <input
+                  type="text"
+                  className="chat-input"
+                  placeholder="메시지를 입력하세요..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+              />
+              <button className="send-button" onClick={sendMessage}>
+                전송
+              </button>
+            </div>
+          </>
+      )}
   </div>
   );
 }
