@@ -15,7 +15,7 @@ export default function ReportListPage() {
       try {
         const response = await axios.get(`${API_HOST}/report/${adminId}`);
         console.log("신고 리스트 데이터:", response.data);
-        
+
         if (response.data.isSuccess) {
           setReports(response.data.result); // 서버에서 받은 데이터 저장
         } else {
@@ -39,7 +39,7 @@ export default function ReportListPage() {
         {reports.length > 0 ? (
           reports.map((report) => (
             <div key={report.reportId} className="report-item">
-              <p className="report-title">{JSON.parse(report.text).text || "내용 없음"}</p>
+              <p className="report-title">{report.text || "내용 없음"}</p>
               <div className="report-info">
                 <span className="report-label">신고 시간</span>
                 <span className="report-date">{new Date(report.dateTime).toLocaleString()}</span>
