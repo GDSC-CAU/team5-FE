@@ -30,6 +30,7 @@ const ChatPage = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`${API_HOST}/chats/teams/${teamId}?userId=${userId}&role=${UserRole.ADMIN}`);
+        
         setMessages(response.data.result.messages.reverse());
       } catch (error) {
         console.error("메시지 로딩 오류:", error);
