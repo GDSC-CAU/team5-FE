@@ -152,80 +152,93 @@ export default function ChatPage() {
 
   return (
     <div className="chat-container">
-      {/* 상단 네비게이션 */}
-      <div className="chat-header">
-        <ArrowLeft className="back-icon" onClick={() => navigate(-1)} />
-        <h1 className="chat-title">{`채팅방 - ${teamId}`}</h1>
-      </div>
+    {/* 상단 네비게이션 */}
+    <div className="chat-header">
+      <ArrowLeft className="back-icon" onClick={() => navigate(-1)} />
+      <h1 className="chat-title">{`채팅방 - ${teamId}`}</h1>
+    </div>
 
-      {/* 채팅 메시지 목록 */}
-      <div className="chat-messages">
-        {messages.map((msg, index) => {
-          const chatId = msg.chatId;
-          const isUser = Number(msg.userId) === userId;
-          const hasTranslation = msg.translatedMessage && msg.translatedMessage.trim() !== "";
+    {/* 채팅 메시지 목록 */}
+    <div className="chat-messages">
+      {messages.map((msg, index) => {
+        const chatId = msg.chatId;
+        const isUser = Number(msg.userId) === userId;
+        const hasTranslation = msg.translatedMessage && msg.translatedMessage.trim() !== "";
 
-          return (
-            <div
-              key={index}
-              className={`chat-section ${isUser ? "user" : "admin"}`}
-              onClick={() => {
-                if (hasTranslation) {
-                  setVisibleTexts((prev) => {
-                    const newMap = new Map(prev);
-                    newMap.set(chatId, !newMap.get(chatId));
-                    return newMap;
-                  });
-                }
-              }}
-            >
-              {!isUser && (
-                <>
-                  <img src={msg.img || defaultImage} alt={msg.name} className="chat-profile" />
-                  <div className="chat-content">
-                    <span className="chat-name">{msg.name}</span>
-                    <div className="chat-bubble">
-                      {highlightTerms(msg.message, msg.translatedTerms, chatId)}
-                    </div>
-                    <span className="chat-time">{formatDate(msg.sendTime)}</span>
+        return (
+          <div
+            key={index}
+            className={`chat-section ${isUser ? "user" : "admin"}`}
+            onClick={() => {
+              if (hasTranslation) {
+                setVisibleTexts((prev) => {
+                  const newMap = new Map(prev);
+                  newMap.set(chatId, !newMap.get(chatId));
+                  return newMap;
+                });
+              }
+            }}
+          >
+            {!isUser && (
+              <>
+                <img src={msg.img || defaultImage} alt={msg.name} className="chat-profile" />
+                <div className="chat-content">
+                  <span className="chat-name">{msg.name}</span>
+                  <div className="chat-bubble">
+                    {highlightTerms(msg.message, msg.translatedTerms, chatId)}
+                  </div>
+                  <span className="chat-time">{formatDate(msg.sendTime)}</span>
 
-                    {/*번역된 단어 표시*/}
-                    {Array.from(highlightedTerms.entries()).map(([key, meaning]) => {
-                    const term = key.split('-').slice(2).join('-'); // key가 앞의 숫자 있어서 지우고 출력하려고 ~
-
+                  {/* 번역된 단어 표시 */}
+                  {Array.from(highlightedTerms.entries()).map(([key, meaning]) => {
+                    const term = key.split('-').slice(2).join('-'); // 숫자 제거 후 단어만 표시
                     return key.startsWith(`${chatId}-`) ? (
                       <div key={key} className="explanation-box">
                         <div className="explanation-content">
                           <p><strong>{term}</strong>: {meaning}</p>
                         </div>
                       </div>
-                      ) : null;
-                      })}
+                    ) : null;
+                  })}
 
-
-                    {/* 전체 번역된 메시지 표시 (하이라이팅 외의 영역 클릭 시 토글) */}
-                    {visibleTexts.get(chatId) && hasTranslation && (
-                      <div className="explanation-box">
-                        <div className="explanation-content">
-                          <p>{msg.translatedMessage}</p>
-                        </div>
+                  {/* 전체 번역된 메시지 표시 (하이라이팅 외 영역 클릭 시) */}
+                  {visibleTexts.get(chatId) && hasTranslation && (
+                    <div className="explanation-box">
+                      <div className="explanation-content">
+                        <p>{msg.translatedMessage}</p>
                       </div>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {isUser && (
-                <div className="chat-content user">
-                  <div className="chat-bubble user-bubble">{msg.message}</div>
-                  <span className="chat-time">{formatDate(msg.sendTime)}</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef}></div>
-      </div>
+              </>
+            )}
+
+            {isUser && (
+              <div className="chat-content user">
+                <div className="chat-bubble user-bubble">{msg.message}</div>
+                <span className="chat-time">{formatDate(msg.sendTime)}</span>
+              </div>
+            )}
+          </div>
+        );
+      })}
+      <div ref={messagesEndRef}></div>
     </div>
+
+    {/*입력창을 chat-messages 바깥에 배치*/}
+    <div className="chat-input-container" onClick={(e) => e.stopPropagation()}>
+      <input
+        type="text"
+        className="chat-input"
+        placeholder="메시지를 입력하세요..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+      />
+      <button className="send-button" onClick={sendMessage}>
+        전송
+      </button>
+    </div>
+  </div>
   );
 }
